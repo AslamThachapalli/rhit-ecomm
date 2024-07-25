@@ -1,8 +1,7 @@
-import { User } from "firebase/auth";
 import { atom } from "recoil";
-import { Nullable } from "../../lib/global";
+import { Nullable } from "../../lib/globals";
 
-export const userState = atom<Nullable<User>>({
+export const userState = atom<Nullable<AppUser>>({
   key: "userState",
   default: null,
 });

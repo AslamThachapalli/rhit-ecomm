@@ -1,7 +1,7 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { firebaseConfig } from "../firebaseConfig";
-import { Firestore, getFirestore } from "firebase/firestore/lite";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { Firestore, getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 class FirebaseCore {
     private static _instance: FirebaseCore;
@@ -26,12 +26,25 @@ class FirebaseCore {
         return this._db;
     }
 
-    async signUpWithEmailPassword(email: string, password: string) {
+    async signUpWithEmailPassword(firstname: string, lastname: string, email: string, password: string) {
         const auth = getAuth();
 
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, password)
-            return userCred.user;
+            var uid = userCred.user.uid;
+
+            var appUser: AppUser = {
+                uid,
+                firstname,
+                lastname,
+                email,
+                phone: "",
+                createdOn: Date.now(),
+            }
+
+            await setDoc(doc(this._db, 'users', uid), appUser)
+
+            return appUser;
         } catch (error: any) {
             throw new Error(error.code);
         }
@@ -42,7 +55,15 @@ class FirebaseCore {
 
         try {
             const userCred = await signInWithEmailAndPassword(auth, email, password)
-            return userCred.user;
+
+            const docRef = doc(this._db, 'users', userCred.user.uid)
+            const docSnap = await getDoc(docRef)
+
+            if (docSnap.exists()) {
+                return docSnap.data() as AppUser
+            } else {
+                return null
+            }
         } catch (error: any) {
             throw new Error(error.code);
         }
