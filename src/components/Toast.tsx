@@ -20,7 +20,7 @@ export default function Toast({ message, onClose, autoDismiss = true, type = Toa
     }
 
     return (
-        <div id="toast-top-right" className="animate-slide-in-left duration-1000 fixed flex items-center w-full max-w-xs p-4 space-x-4 divide-x rtl:divide-x-reverse rounded-lg shadow top-5 right-5" role="alert">
+        <div id="toast-top-right" className="animate-slide-in-left duration-1000 fixed flex items-center w-full max-w-xs p-4 space-x-4 divide-x rtl:divide-x-reverse rounded-lg top-5 right-5" role="alert">
             <div className={`${type} max-w-x text-sm text-white rounded-xl shadow-lg`} role="alert" tabIndex={-1} aria-labelledby="hs-toast-solid-color-red-label">
                 <div id="toast" className="flex p-4">
                     {message}

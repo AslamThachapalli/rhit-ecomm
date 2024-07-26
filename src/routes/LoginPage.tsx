@@ -1,34 +1,74 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { Button, Card, Input, Typography, IconButton } from "@material-tailwind/react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../store/atoms/authStore";
+import { useLocation, useNavigate } from "react-router-dom";
 import { firebaseCore } from "../lib/firebaseCore";
-import { useState } from "react";
-import Spinner from "../components/Spinner";
 import Toast from "../components/Toast";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
 
 export default function LoginPage() {
-    let navigate = useNavigate();
-    let location = useLocation();
-    let setUser = useSetRecoilState(userState);
-
-    let [newUser, setNewUser] = useState(true);
-    let [loading, setLoading] = useState(false);
+    const [newUser, setNewUser] = useState(false)
     let [error, setError] = useState<{ show: boolean, message: string }>({
         show: false,
         message: '',
     });
+
+    return (
+        <>
+            {error.show && <Toast
+                message={error.message}
+                onClose={() => {
+                    setError({
+                        show: false,
+                        message: '',
+                    })
+                }} />}
+
+            <div className="bg-blue-gray-100 bg-cover bg-no-repeat h-screen flex justify-center items-center overflow-scroll" >
+                <Card className="p-8 bg-white/30 backdrop-blur-sm" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                    {newUser ?
+                        <SignupForm
+                            onSigninPressed={() => setNewUser(false)}
+                            onError={(message) => setError({
+                                show: true,
+                                message: message
+                            })} /> :
+                        <SigninForm
+                            onSignupPressed={() => setNewUser(true)}
+                            onError={(message) => setError({
+                                show: true,
+                                message: message
+                            })} />}
+                </Card>
+            </div>
+        </>
+
+    )
+}
+
+interface SigninFormProps {
+    onSignupPressed: () => void
+    onError: (message: string) => void
+}
+
+function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
+    let navigate = useNavigate();
+    let location = useLocation();
+    let setUser = useSetRecoilState(userState);
+
+    let [loading, setLoading] = useState(false);
+
     let [showPassword, setShowPassword] = useState(false);
 
     let from = location.state?.from?.pathname || "/";
 
-    async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+    async function handleSignin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         let formData = new FormData(event.currentTarget);
-        let email = formData.get("loginEmail") as string;
-        let password = formData.get("loginPassword") as string;
+        let email = formData.get("email") as string;
+        let password = formData.get("password") as string;
 
         setLoading(true);
 
@@ -36,10 +76,7 @@ export default function LoginPage() {
             const user = await firebaseCore.signInWithEmailPassword(email, password);
             setLoading(false)
             if (!user) {
-                setError({
-                    show: true,
-                    message: 'User not registered'
-                })
+                onError('User not registered')
                 return;
             }
 
@@ -47,12 +84,90 @@ export default function LoginPage() {
             navigate(from, { replace: true });
         } catch (e: any) {
             setLoading(false)
-            setError({
-                show: true,
-                message: e.message
-            })
+            onError(e.message)
         }
     }
+
+    return (
+        <>
+
+            <Typography variant="h4" color="blue-gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                Sign In
+            </Typography>
+            <Typography color="gray" className="mt-1 font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                Welcome back! Enter your details to signin.
+            </Typography>
+
+            <form onSubmit={handleSignin} className="mt-8 mb-2 w-full max-w-screen-lg sm:w-96">
+                <div className="mb-1 flex flex-col gap-6">
+
+                    <Typography variant="h6" color="blue-gray" className="-mb-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                        Your Email
+                    </Typography>
+                    <Input
+                        id="email"
+                        size="lg"
+                        name="email"
+                        placeholder="name@mail.com"
+                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                        labelProps={{
+                            className: "before:content-none after:content-none",
+                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}
+                    />
+
+                    <Typography variant="h6" color="blue-gray" className="-mb-3" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined} >
+                        Password
+                    </Typography>
+                    <Input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        size="lg"
+                        placeholder="********"
+                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 pr-10"
+                        icon={<IconButton
+                            variant="text"
+                            ripple={false}
+                            className="-mt-2 hover:bg-transparent focus:bg-transparent active:bg-transparent"
+                            onClick={() => setShowPassword(!showPassword)}
+                            placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                            {showPassword ? <EyeSlashIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                        </IconButton>}
+                        labelProps={{
+                            className: "before:content-none after:content-none",
+                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}
+                    />
+
+                </div>
+
+                <Button loading={loading} type="submit" className="mt-6 flex justify-center" fullWidth onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined} >
+                    sign in
+                </Button>
+                <Typography color="gray" className="mt-4 text-center font-normal" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined}>
+                    Don't have an account?{" "}
+                    <button type="button" onClick={onSignupPressed} className="font-medium text-gray-900">
+                        Sign Up
+                    </button>
+                </Typography>
+            </form>
+        </>
+    )
+}
+
+interface SignupFormProps {
+    onSigninPressed: () => void
+    onError: (message: string) => void
+}
+
+function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
+    let navigate = useNavigate();
+    let location = useLocation();
+    let setUser = useSetRecoilState(userState);
+
+    let [loading, setLoading] = useState(false);
+    let [showPassword, setShowPassword] = useState(false);
+
+    let from = location.state?.from?.pathname || "/";
 
     async function handleSignup(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -62,15 +177,6 @@ export default function LoginPage() {
         let lastname = formData.get("lastname") as string;
         let email = formData.get("email") as string;
         let password = formData.get("password") as string;
-        let confirmPassword = formData.get("confirmPassword") as string;
-
-        if (password !== confirmPassword) {
-            setError({
-                show: true,
-                message: "Passwords doesn't match"
-            })
-            return;
-        }
 
         setLoading(true)
 
@@ -81,191 +187,102 @@ export default function LoginPage() {
             navigate(from, { replace: true });
         } catch (e: any) {
             setLoading(false)
-            setError({
-                show: true,
-                message: e.message
-            })
+            onError(e.message)
         }
     }
 
     return (
-        <div className="bg-auth-bg bg-cover bg-no-repeat h-screen flex justify-center items-center" >
+        <>
 
-            {error.show && <Toast
-                message={error.message}
-                onClose={() => {
-                    setError({
-                        show: false,
-                        message: '',
-                    })
-                }} />}
+            <Typography variant="h4" color="blue-gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                Sign Up
+            </Typography>
+            <Typography color="gray" className="mt-1 font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                Nice to meet you! Enter your details to register.
+            </Typography>
 
-            <div className="w-2/4 max-w-lg h-3/4 bg-white/30 backdrop-blur-sm rounded-3xl p-10">
-                <div className="rounded-2xl h-14 w-full bg-black/30 flex flex-row text-white">
+            <form onSubmit={handleSignup} className="mt-8 mb-2 w-full max-w-screen-lg sm:w-96">
+                <div className="mb-1 flex flex-col gap-6">
+                    <div className="flex flex-row -mt-3">
+                        <div className="flex-1">
+                            <Typography variant="h6" color="blue-gray" className="mb-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                First Name
+                            </Typography>
+                            <Input
+                                id="firstname"
+                                name="firstname"
+                                size="lg"
+                                placeholder="John"
+                                className=" !border-t-blue-gray-200 focus:!border-t-gray-900 max-w-[180px]"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
+                        </div>
 
-                    <div className={`basis-1/2 rounded-s-2xl flex justify-center items-center ${newUser ? 'bg-black' : ''}`} onClick={() => setNewUser(true)}>
-                        Sign up
+                        <div className="flex-1">
+                            <Typography variant="h6" color="blue-gray" className="mb-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                                Last Name
+                            </Typography>
+                            <Input
+                                id="lastname"
+                                name="lastname"
+                                size="lg"
+                                placeholder="Snow"
+                                className=" !border-t-blue-gray-200 focus:!border-t-gray-900 max-w-[180px]"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
+                        </div>
                     </div>
+                    <Typography variant="h6" color="blue-gray" className="-mb-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                        Your Email
+                    </Typography>
+                    <Input
+                        id="email"
+                        name="email"
+                        size="lg"
+                        placeholder="name@mail.com"
+                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
+                        labelProps={{
+                            className: "before:content-none after:content-none",
+                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}
+                    />
 
-                    <div className={`basis-1/2 rounded-e-2xl flex justify-center items-center ${!newUser ? 'bg-black' : ''}`} onClick={() => setNewUser(false)}>
-                        Log in
-                    </div>
+                    <Typography variant="h6" color="blue-gray" className="-mb-3" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined} >
+                        Password
+                    </Typography>
+                    <Input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        size="lg"
+                        placeholder="********"
+                        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 pr-10"
+                        icon={<IconButton
+                            variant="text"
+                            ripple={false}
+                            className="-mt-2 hover:bg-transparent focus:bg-transparent active:bg-transparent"
+                            onClick={() => setShowPassword(!showPassword)}
+                            placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                            {showPassword ? <EyeSlashIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                        </IconButton>}
+                        labelProps={{
+                            className: "before:content-none after:content-none",
+                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}
+                    />
 
                 </div>
 
-                <div className="mt-10 mx-10">
-                    {newUser ?
-                        <form onSubmit={handleSignup} className="space-y-4">
-
-                            <div className="flex flex-row gap-x-4">
-                                <div>
-                                    <label htmlFor="firstname" className="block text-sm font-medium leading-6 text-black">
-                                        First name
-                                    </label>
-                                    <div className="mt-1">
-                                        <input
-                                            id="firstname"
-                                            name="firstname"
-                                            type="text"
-                                            className="h-12 border-gray-700 border block w-full rounded-xl text-gray-900"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label htmlFor="lastname" className="block text-sm font-medium leading-6 text-black">
-                                        Last name
-                                    </label>
-                                    <div className="mt-1">
-                                        <input
-                                            id="lastname"
-                                            name="lastname"
-                                            type="text"
-                                            className="h-12 border-gray-700 border block w-full rounded-xl text-gray-900"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium leading-6 text-black">
-                                    Email address
-                                </label>
-                                <div className="mt-1">
-                                    <input
-                                        id="email"
-                                        name="email"
-                                        type="email"
-                                        required
-                                        autoComplete="email"
-                                        className="h-12 border-gray-700 border block w-full rounded-xl text-gray-90"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium leading-6 text-black">
-                                    Password
-                                </label>
-                                <div className="mt-1 relative">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type={showPassword ? 'text': 'password'}
-                                        required
-                                        className="h-12 border-gray-700 border block w-full rounded-xl text-gray-900 pr-10"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                                    >
-                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="confirmPassword" className="block text-sm font-medium leading-6 text-black">
-                                    Confirm Password
-                                </label>
-                                <div className="mt-1">
-                                    <input
-                                        id="confirmPassword"
-                                        name="confirmPassword"
-                                        type="text"
-                                        required
-                                        className="h-12 border-gray-700 border block w-full rounded-xl text-gray-900"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="flex w-full justify-center items-center rounded-full h-12 mt-5 bg-black text-sm font-semibold text-white"
-                                >
-                                    {
-                                        loading ? <Spinner /> : 'Sign up'
-                                    }
-                                </button>
-                            </div>
-                        </form>
-                        :
-                        <form onSubmit={handleLogin} className="space-y-6">
-                            <div>
-                                <label htmlFor="loginEmail" className="block text-sm font-medium leading-6 text-black">
-                                    Email address
-                                </label>
-                                <div className="mt-1">
-                                    <input
-                                        id="loginEmail"
-                                        name="loginEmail"
-                                        type="email"
-                                        required
-                                        autoComplete="email"
-                                        className="h-12 border-gray-700 border block w-full rounded-xl text-gray-900"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="loginPassword" className="block text-sm font-medium leading-6 text-black">
-                                    Password
-                                </label>
-                                <div className="mt-1 relative">
-                                    <input
-                                        id="loginPassword"
-                                        name="loginPassword"
-                                        type={showPassword ? 'text': 'password'}
-                                        required
-                                        className="h-12 border-gray-700 border block w-full rounded-xl text-gray-900 pr-10"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                                    >
-                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="flex w-full justify-center items-center rounded-full h-12 mt-1 bg-black text-sm font-semibold text-white"
-                                >
-                                    {
-                                        loading ? <Spinner /> : 'Log in'
-                                    }
-                                </button>
-                            </div>
-                        </form>
-                    }
-                </div>
-            </div>
-
-        </div>
-    );
+                <Button loading={loading} type="submit" className="mt-6 flex justify-center" fullWidth onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined} >
+                    sign up
+                </Button>
+                <Typography color="gray" className="mt-4 text-center font-normal" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined}>
+                    Already have an account?{" "}
+                    <button type="button" onClick={onSigninPressed} className="font-medium text-gray-900">
+                        Sign In
+                    </button>
+                </Typography>
+            </form>
+        </>
+    )
 }

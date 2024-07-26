@@ -1,10 +1,171 @@
+import React from "react";
+import {
+  Navbar,
+  Collapse,
+  Typography,
+  IconButton,
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+  Button,
+} from "@material-tailwind/react";
+import { Bars3Icon, XMarkIcon, UserIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { useRecoilValue } from "recoil";
+import { userState } from "../store/atoms/authStore";
 import { Link } from "react-router-dom";
 
+function NavList() {
+  const user = useRecoilValue(userState);
+
+  return (
+    <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+      {/* Products */}
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+        <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
+          All Products
+        </a>
+      </Typography>
+
+      {/* Cart Icon */}
+      <IconButton
+        variant="text"
+        className="h-8 w-8 text-inherit hidden lg:inline-block"
+        ripple={true}
+        onClick={() => { }} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+      >
+        <Link to={'/cart'}>
+          <ShoppingCartIcon className="h-6 w-6" />
+        </Link>
+      </IconButton>
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="lg:hidden inline-block p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+        <Link to={'/cart'} className="flex items-center hover:text-blue-500 transition-colors">
+          My Cart
+        </Link>
+      </Typography>
+
+      {/* Orders */}
+      {!user && <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="lg:hidden inline-block p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+        <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
+          My Order
+        </a>
+      </Typography>}
+
+      {/* Login and Account Icon */}
+      {
+        !user ?
+          <>
+            <Menu placement="bottom-end">
+              <MenuHandler>
+                <IconButton
+                  variant="text"
+                  className="h-8 w-8 text-inherit hidden lg:inline-block"
+                  ripple={true}
+                  onClick={() => { }} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                >
+                  <UserIcon className="h-6 w-6" />
+                </IconButton>
+              </MenuHandler>
+              <MenuList placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                <MenuItem placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Account Details</MenuItem>
+                <MenuItem placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>My Orders</MenuItem>
+                <hr className="my-3" />
+                <MenuItem placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Sign out</MenuItem>
+              </MenuList>
+            </Menu>
+
+            <Typography
+              as="li"
+              variant="small"
+              color="blue-gray"
+              className="lg:hidden inline-block p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+              <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
+                My Account
+              </a>
+            </Typography>
+          </>
+          :
+          <>
+            <Button
+              variant="gradient"
+              size="sm"
+              className="hidden lg:inline-block"
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
+              Login
+            </Button>
+            <Typography
+              as="li"
+              variant="small"
+              color="blue-gray"
+              className="lg:hidden inline-block p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+              <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
+                Login
+              </a>
+            </Typography>
+          </>
+      }
+
+    </ul>
+  );
+}
+
 export default function Header() {
-    return (
-        <div className="bg-red-500 flex flex-row">
-            <Link to={'/login'}>Login</Link>
-            <Link to={'/cart'}>Cart</Link>
+  const [openNav, setOpenNav] = React.useState(false);
+
+  const handleWindowResize = () =>
+    window.innerWidth >= 960 && setOpenNav(false);
+
+  React.useEffect(() => {
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
+
+  return (
+    <Navbar className="sticky top-0 z-10 mx-auto lg:max-w-screen-xl w-11/12 px-6 py-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+      <div className="flex items-center justify-between text-blue-gray-900">
+        <Typography
+          as="a"
+          href="#"
+          variant="h6"
+          className="mr-4 cursor-pointer py-1.5" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
+          Repair Hands
+        </Typography>
+        <div className="hidden lg:block">
+          <NavList />
         </div>
-    )
+        <IconButton
+          variant="text"
+          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+          ripple={false}
+          onClick={() => setOpenNav(!openNav)} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
+          {openNav ? (
+            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+          ) : (
+            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+          )}
+        </IconButton>
+      </div>
+      <Collapse open={openNav}>
+        <NavList />
+      </Collapse>
+    </Navbar>
+  );
 }
