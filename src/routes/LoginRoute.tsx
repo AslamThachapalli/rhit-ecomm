@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { firebaseCore } from "../lib/firebaseCore";
 import Toast from "../components/Toast";
 
-export default function LoginPage() {
+export default function LoginRoute() {
     const [newUser, setNewUser] = useState(false)
     let [error, setError] = useState<{ show: boolean, message: string }>({
         show: false,
@@ -26,7 +26,7 @@ export default function LoginPage() {
                 }} />}
 
             <div className="bg-blue-gray-100 bg-cover bg-no-repeat h-screen flex justify-center items-center overflow-scroll" >
-                <Card className="p-8 bg-white/30 backdrop-blur-sm" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                <Card className="p-8 bg-white/30 backdrop-blur-sm">
                     {newUser ?
                         <SignupForm
                             onSigninPressed={() => setNewUser(false)}
@@ -91,17 +91,17 @@ function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
     return (
         <>
 
-            <Typography variant="h4" color="blue-gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Typography variant="h4" color="blue-gray">
                 Sign In
             </Typography>
-            <Typography color="gray" className="mt-1 font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Typography color="gray" className="mt-1 font-normal">
                 Welcome back! Enter your details to signin.
             </Typography>
 
             <form onSubmit={handleSignin} className="mt-8 mb-2 w-full max-w-screen-lg sm:w-96">
                 <div className="mb-1 flex flex-col gap-6">
 
-                    <Typography variant="h6" color="blue-gray" className="-mb-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                    <Typography variant="h6" color="blue-gray" className="-mb-3">
                         Your Email
                     </Typography>
                     <Input
@@ -112,10 +112,10 @@ function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
                         className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                         labelProps={{
                             className: "before:content-none after:content-none",
-                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}
+                        }}
                     />
 
-                    <Typography variant="h6" color="blue-gray" className="-mb-3" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined} >
+                    <Typography variant="h6" color="blue-gray" className="-mb-3">
                         Password
                     </Typography>
                     <Input
@@ -130,20 +130,20 @@ function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
                             ripple={false}
                             className="-mt-2 hover:bg-transparent focus:bg-transparent active:bg-transparent"
                             onClick={() => setShowPassword(!showPassword)}
-                            placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                        >
                             {showPassword ? <EyeSlashIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                         </IconButton>}
                         labelProps={{
                             className: "before:content-none after:content-none",
-                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}
+                        }}
                     />
 
                 </div>
 
-                <Button loading={loading} type="submit" className="mt-6 flex justify-center" fullWidth onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined} >
+                <Button loading={loading} type="submit" className="mt-6 flex justify-center" fullWidth >
                     sign in
                 </Button>
-                <Typography color="gray" className="mt-4 text-center font-normal" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined}>
+                <Typography color="gray" className="mt-4 text-center font-normal">
                     Don't have an account?{" "}
                     <button type="button" onClick={onSignupPressed} className="font-medium text-gray-900">
                         Sign Up
@@ -194,10 +194,10 @@ function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
     return (
         <>
 
-            <Typography variant="h4" color="blue-gray" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Typography variant="h4" color="blue-gray">
                 Sign Up
             </Typography>
-            <Typography color="gray" className="mt-1 font-normal" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+            <Typography color="gray" className="mt-1 font-normal">
                 Nice to meet you! Enter your details to register.
             </Typography>
 
@@ -205,7 +205,7 @@ function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
                 <div className="mb-1 flex flex-col gap-6">
                     <div className="flex flex-row -mt-3">
                         <div className="flex-1">
-                            <Typography variant="h6" color="blue-gray" className="mb-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                            <Typography variant="h6" color="blue-gray" className="mb-3">
                                 First Name
                             </Typography>
                             <Input
@@ -216,11 +216,11 @@ function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
                                 className=" !border-t-blue-gray-200 focus:!border-t-gray-900 max-w-[180px]"
                                 labelProps={{
                                     className: "before:content-none after:content-none",
-                                }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
+                                }} />
                         </div>
 
                         <div className="flex-1">
-                            <Typography variant="h6" color="blue-gray" className="mb-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                            <Typography variant="h6" color="blue-gray" className="mb-3">
                                 Last Name
                             </Typography>
                             <Input
@@ -231,10 +231,10 @@ function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
                                 className=" !border-t-blue-gray-200 focus:!border-t-gray-900 max-w-[180px]"
                                 labelProps={{
                                     className: "before:content-none after:content-none",
-                                }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined} />
+                                }} />
                         </div>
                     </div>
-                    <Typography variant="h6" color="blue-gray" className="-mb-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                    <Typography variant="h6" color="blue-gray" className="-mb-3">
                         Your Email
                     </Typography>
                     <Input
@@ -245,10 +245,10 @@ function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
                         className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                         labelProps={{
                             className: "before:content-none after:content-none",
-                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}
+                        }}
                     />
 
-                    <Typography variant="h6" color="blue-gray" className="-mb-3" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined} >
+                    <Typography variant="h6" color="blue-gray" className="-mb-3" >
                         Password
                     </Typography>
                     <Input
@@ -263,20 +263,20 @@ function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
                             ripple={false}
                             className="-mt-2 hover:bg-transparent focus:bg-transparent active:bg-transparent"
                             onClick={() => setShowPassword(!showPassword)}
-                            placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+                        >
                             {showPassword ? <EyeSlashIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                         </IconButton>}
                         labelProps={{
                             className: "before:content-none after:content-none",
-                        }} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} crossOrigin={undefined}
+                        }}
                     />
 
                 </div>
 
-                <Button loading={loading} type="submit" className="mt-6 flex justify-center" fullWidth onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined} >
+                <Button loading={loading} type="submit" className="mt-6 flex justify-center" fullWidth >
                     sign up
                 </Button>
-                <Typography color="gray" className="mt-4 text-center font-normal" onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} placeholder={undefined}>
+                <Typography color="gray" className="mt-4 text-center font-normal">
                     Already have an account?{" "}
                     <button type="button" onClick={onSigninPressed} className="font-medium text-gray-900">
                         Sign In

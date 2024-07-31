@@ -3,31 +3,48 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import RootPage from './routes/RootPage.tsx'
-import HomePage from './routes/HomePage.tsx'
+import RootRoute from './routes/RootRoute.tsx'
+import HomeRoute from './routes/HomeRoute.tsx'
 import { RecoilRoot } from 'recoil'
-import CartPage from './routes/CartPage.tsx'
+import CartRoute from './routes/CartRoute.tsx'
 import RequireAuth from './components/RequireAuth.tsx'
-import LoginPage from './routes/LoginPage.tsx'
+import LoginRoute from './routes/LoginRoute.tsx'
+import AccountRoute from './routes/AccountRoute.tsx'
+import MyProfileRoute from './routes/MyProfileRoute.tsx'
+import AddressRoute from './routes/AddressRoute.tsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <RootPage />,
+    element: <RootRoute />,
     children: [
       {
         index: true,
-        element: <HomePage />,
+        element: <HomeRoute />,
       },
       {
-        path: '/cart',
-        element: <RequireAuth><CartPage/></RequireAuth>
-      }
+        path: 'cart',
+        element: <RequireAuth><CartRoute /></RequireAuth>
+      },
+      {
+        path: 'account',
+        element: <RequireAuth><AccountRoute /></RequireAuth>,
+        children: [
+          {
+            index: true,
+            element: <MyProfileRoute />
+          },
+          {
+            path: 'address',
+            element: <AddressRoute />
+          }
+        ]
+      },
     ]
-  }, 
+  },
   {
     path: '/auth',
-    element: <LoginPage/>
+    element: <LoginRoute />
   }
 ])
 

@@ -13,10 +13,11 @@ import {
 import { Bars3Icon, XMarkIcon, UserIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useRecoilValue } from "recoil";
 import { userState } from "../store/atoms/authStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function NavList() {
   const user = useRecoilValue(userState);
+  const navigate = useNavigate();
 
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -25,7 +26,7 @@ function NavList() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+        className="p-1 font-medium">
         <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
           All Products
         </a>
@@ -36,28 +37,26 @@ function NavList() {
         variant="text"
         className="h-8 w-8 text-inherit hidden lg:inline-block"
         ripple={true}
-        onClick={() => { }} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+        onClick={() => navigate('/cart')}
       >
-        <Link to={'/cart'}>
-          <ShoppingCartIcon className="h-6 w-6" />
-        </Link>
+        <ShoppingCartIcon className="h-6 w-6" />
       </IconButton>
       <Typography
         as="li"
         variant="small"
         color="blue-gray"
-        className="lg:hidden inline-block p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+        className="lg:hidden inline-block p-1 font-medium">
         <Link to={'/cart'} className="flex items-center hover:text-blue-500 transition-colors">
           My Cart
         </Link>
       </Typography>
 
       {/* Orders */}
-      {!user && <Typography
+      {user && <Typography
         as="li"
         variant="small"
         color="blue-gray"
-        className="lg:hidden inline-block p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+        className="lg:hidden inline-block p-1 font-medium">
         <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
           My Order
         </a>
@@ -65,7 +64,7 @@ function NavList() {
 
       {/* Login and Account Icon */}
       {
-        !user ?
+        user ?
           <>
             <Menu placement="bottom-end">
               <MenuHandler>
@@ -73,16 +72,22 @@ function NavList() {
                   variant="text"
                   className="h-8 w-8 text-inherit hidden lg:inline-block"
                   ripple={true}
-                  onClick={() => { }} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}
+                  onClick={() => { }}
                 >
                   <UserIcon className="h-6 w-6" />
                 </IconButton>
               </MenuHandler>
-              <MenuList placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                <MenuItem placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Account Details</MenuItem>
-                <MenuItem placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>My Orders</MenuItem>
+              <MenuList>
+                <MenuItem onClick={() => navigate('/account')}>
+                  Account Details
+                </MenuItem>
+                <MenuItem>
+                  My Orders
+                </MenuItem>
                 <hr className="my-3" />
-                <MenuItem placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>Sign out</MenuItem>
+                <MenuItem>
+                  Sign out
+                </MenuItem>
               </MenuList>
             </Menu>
 
@@ -90,7 +95,7 @@ function NavList() {
               as="li"
               variant="small"
               color="blue-gray"
-              className="lg:hidden inline-block p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+              className="lg:hidden inline-block p-1 font-medium"      >
               <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
                 My Account
               </a>
@@ -102,9 +107,7 @@ function NavList() {
               variant="gradient"
               size="sm"
               className="hidden lg:inline-block"
-              placeholder={undefined}
-              onPointerEnterCapture={undefined}
-              onPointerLeaveCapture={undefined}
+              onClick={() => navigate('/auth')}
             >
               Login
             </Button>
@@ -112,7 +115,7 @@ function NavList() {
               as="li"
               variant="small"
               color="blue-gray"
-              className="lg:hidden inline-block p-1 font-medium" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}      >
+              className="lg:hidden inline-block p-1 font-medium"      >
               <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
                 Login
               </a>
@@ -139,13 +142,13 @@ export default function Header() {
   }, []);
 
   return (
-    <Navbar className="sticky top-0 z-10 mx-auto lg:max-w-screen-xl w-11/12 px-6 py-3" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+    <Navbar className="sticky top-0 z-10 mx-auto lg:max-w-screen-xl w-11/12 px-6 py-3">
       <div className="flex items-center justify-between text-blue-gray-900">
         <Typography
           as="a"
           href="#"
           variant="h6"
-          className="mr-4 cursor-pointer py-1.5" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
+          className="mr-4 cursor-pointer py-1.5"        >
           Repair Hands
         </Typography>
         <div className="hidden lg:block">
@@ -155,7 +158,7 @@ export default function Header() {
           variant="text"
           className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
           ripple={false}
-          onClick={() => setOpenNav(!openNav)} placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}        >
+          onClick={() => setOpenNav(!openNav)}        >
           {openNav ? (
             <XMarkIcon className="h-6 w-6" strokeWidth={2} />
           ) : (

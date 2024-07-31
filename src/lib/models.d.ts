@@ -17,3 +17,17 @@ interface AppUser {
 
 // var d = new Date(dateMilli).toLocaleDateString('en-GB');
 // console.log(d)
+
+interface Address {
+    id: string;
+    userId: string;
+    isDefault: boolean;
+    name: string;
+    phone: string;
+    email: string;
+    pincode: string;
+    city: string;
+    state: string;
+    address: string;
+    landmark: string;
+}
