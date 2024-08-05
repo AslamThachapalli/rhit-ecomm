@@ -7,6 +7,10 @@ export default withMT({
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    colors: {
+      'surface': '#f5fafb',
+      'error': '#B00020'
+    },
     extend: {
       backgroundImage: {
         'auth-bg': "url('/images/auth-page-bg-img.png')",

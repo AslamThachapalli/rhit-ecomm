@@ -1,6 +1,6 @@
 export enum ToastType {
     success = 'bg-teal-500',
-    error = 'bg-red-500',
+    error = 'bg-error',
     info = 'bg-yellow-500 ',
 }
 

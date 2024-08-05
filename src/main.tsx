@@ -8,15 +8,17 @@ import HomeRoute from './routes/HomeRoute.tsx'
 import { RecoilRoot } from 'recoil'
 import CartRoute from './routes/CartRoute.tsx'
 import RequireAuth from './components/RequireAuth.tsx'
-import LoginRoute from './routes/LoginRoute.tsx'
+import AuthRoute from './routes/AuthRoute.tsx'
 import AccountRoute from './routes/AccountRoute.tsx'
 import MyProfileRoute from './routes/MyProfileRoute.tsx'
 import AddressRoute from './routes/AddressRoute.tsx'
+import ErrorRoute from './routes/ErrorRoute.tsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootRoute />,
+    errorElement: <ErrorRoute/>,
     children: [
       {
         index: true,
@@ -44,7 +46,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    element: <LoginRoute />
+    element: <AuthRoute />
   }
 ])
 

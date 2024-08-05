@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { firebaseCore } from "../lib/firebaseCore";
 import Toast from "../components/Toast";
 
-export default function LoginRoute() {
+export default function AuthRoute() {
     const [newUser, setNewUser] = useState(false)
     let [error, setError] = useState<{ show: boolean, message: string }>({
         show: false,
@@ -25,8 +25,8 @@ export default function LoginRoute() {
                     })
                 }} />}
 
-            <div className="bg-blue-gray-100 bg-cover bg-no-repeat h-screen flex justify-center items-center overflow-scroll" >
-                <Card className="p-8 bg-white/30 backdrop-blur-sm">
+            <div className="bg-surface bg-cover bg-no-repeat h-screen flex justify-center items-center overflow-scroll" >
+                <Card className="p-8 bg-white backdrop-blur-sm">
                     {newUser ?
                         <SignupForm
                             onSigninPressed={() => setNewUser(false)}

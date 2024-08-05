@@ -125,7 +125,7 @@ function AddNewAddressForm({ onCancel, onSaved, onSaveError, address }: AddressF
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-2 gap-6">
-                <Input name="name" defaultValue={address?.name} required label="Full Name" size="lg" />
+                <Input name="name" color="teal" defaultValue={address?.name} required label="Full Name" size="lg" />
                 <Input name="phone" defaultValue={address?.phone} required type="number" label="Mobile number" size="lg" />
                 <Input name="email" defaultValue={address?.email} required type="email" label="Email" size="lg" />
                 <Input name="pincode" defaultValue={address?.pincode} required type="number" label="Pincode" size="lg" />
@@ -134,13 +134,13 @@ function AddNewAddressForm({ onCancel, onSaved, onSaveError, address }: AddressF
             </div>
             <Input name="address" defaultValue={address?.address} required label="Address" size="lg" />
             <Input name="landmark" defaultValue={address?.landmark} label="Landmark" size="lg" />
-            <Checkbox name="isDefault" defaultChecked={address?.isDefault} label="Set as default" />
+            <Checkbox name="isDefault" color="teal" defaultChecked={address?.isDefault} label="Set as default" />
             <div className="flex justify-end gap-2">
-                <Button variant="text" color="gray" onClick={() => onCancel()}>
+                <Button variant="text" color="teal" onClick={() => onCancel()}>
                     Cancel
                 </Button>
 
-                <Button type="submit" color="red">
+                <Button type="submit" color="teal">
                     Save Address
                 </Button>
             </div>
@@ -220,14 +220,14 @@ function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }:
                 <DialogFooter>
                     <Button
                         variant="text"
-                        color="red"
+                        color="teal"
                         onClick={cancelDelete}
                         className="mr-1">
                         <span>Cancel</span>
                     </Button>
                     <Button
                         variant="gradient"
-                        color="green"
+                        color="teal"
                         onClick={handleDelete}>
                         <span>Confirm</span>
                     </Button>

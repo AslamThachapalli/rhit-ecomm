@@ -11,13 +11,20 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon, UserIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userState } from "../store/atoms/authStore";
 import { Link, useNavigate } from "react-router-dom";
+import { firebaseCore } from "../lib/firebaseCore";
 
 function NavList() {
-  const user = useRecoilValue(userState);
+  const [user, setUser] = useRecoilState(userState);
   const navigate = useNavigate();
+
+  const signOutUser = () => {
+    firebaseCore.signOutUser()
+
+    setUser(null);
+  }
 
   return (
     <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -85,7 +92,7 @@ function NavList() {
                   My Orders
                 </MenuItem>
                 <hr className="my-3" />
-                <MenuItem>
+                <MenuItem onClick={() => signOutUser()}>
                   Sign out
                 </MenuItem>
               </MenuList>
@@ -107,6 +114,7 @@ function NavList() {
               variant="gradient"
               size="sm"
               className="hidden lg:inline-block"
+              color="teal"
               onClick={() => navigate('/auth')}
             >
               Login
@@ -122,7 +130,6 @@ function NavList() {
             </Typography>
           </>
       }
-
     </ul>
   );
 }

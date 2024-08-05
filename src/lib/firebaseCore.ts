@@ -1,6 +1,6 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { firebaseConfig } from "../firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, Auth } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, Auth, signOut } from "firebase/auth";
 import { Firestore, getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { Nullable } from "./globals";
 
@@ -90,6 +90,10 @@ class FirebaseCore {
         } catch (error: any) {
             throw new Error(error.code);
         }
+    }
+
+    async signOutUser() {
+        signOut(this._auth);
     }
 }
 

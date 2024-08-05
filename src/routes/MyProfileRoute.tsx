@@ -9,7 +9,7 @@ export default function MyProfileRoute() {
     return (
         <Card className="p-14">
             <div className="flex flex-col gap-7">
-                <Typography variant="h5" color="red" className="">
+                <Typography variant="h5">
                     Edit Your Profile
                 </Typography>
                 <div className="flex gap-10">
@@ -33,11 +33,11 @@ export default function MyProfileRoute() {
                 <Input size="lg" label="Confirm New Password"/>
 
                 <div className="flex justify-end gap-2">
-                    <Button variant="text" color="gray">
+                    <Button color="teal" variant="text">
                         Cancel
                     </Button>
 
-                    <Button color="red">
+                    <Button color="teal">
                         Save Changes
                     </Button>
                 </div>
