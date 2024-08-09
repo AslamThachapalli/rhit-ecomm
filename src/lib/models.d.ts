@@ -1,10 +1,11 @@
 interface AppUser {
-    uid: string;
+    id: string;
     firstname: string;
     lastname: string;
     email: string;
     phone: string;
     createdOn: number;
+    updatedOn: number;
 }
 
 // Date Refs

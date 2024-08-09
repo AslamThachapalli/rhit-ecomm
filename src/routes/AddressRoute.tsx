@@ -87,7 +87,7 @@ function AddNewAddressForm({ onCancel, onSaved, onSaveError, address }: AddressF
         const isDefault = formData.get('isDefault')
 
         const newAddress: Partial<Address> = {
-            userId: user?.uid,
+            userId: user?.id,
             name: name?.toString(),
             phone: phone?.toString(),
             email: email?.toString(),
@@ -100,7 +100,7 @@ function AddNewAddressForm({ onCancel, onSaved, onSaveError, address }: AddressF
         }
 
         try {
-            const alladdresses = await getAllAddress(user.uid);
+            const alladdresses = await getAllAddress(user.id);
             const defaultAddress = alladdresses.find((a) => a.isDefault)
 
             if (defaultAddress && isDefault === 'on') {
@@ -163,7 +163,7 @@ function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }:
     });
 
     useEffect(() => {
-        getAllAddress(user.uid).then((result) => {
+        getAllAddress(user.id).then((result) => {
             setAddresses(result)
         }).catch((e) => {
             onError(e.message)
@@ -183,7 +183,7 @@ function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }:
                 updateAddress(newDefault),
             ])
 
-            const allAddresses = await getAllAddress(user?.uid)
+            const allAddresses = await getAllAddress(user?.id)
             setAddresses(allAddresses)
         } catch (e: any) {
             onError(e.message)
@@ -193,7 +193,7 @@ function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }:
     async function handleDelete() {
         try {
             await deleteAddress(deleteState.deleteId!);
-            const allAddresses = await getAllAddress(user?.uid)
+            const allAddresses = await getAllAddress(user?.id)
             setAddresses(allAddresses)
         } catch (e: any) {
             onError(e.message)

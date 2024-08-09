@@ -41,9 +41,9 @@ class FirebaseCore {
             return null
         }
 
-        const uid = user.uid;
+        const id = user.uid;
 
-        const docRef = doc(this._db, 'users', uid)
+        const docRef = doc(this._db, 'users', id)
         const docSnap = await getDoc(docRef)
 
         if (docSnap.exists()) {
@@ -56,18 +56,19 @@ class FirebaseCore {
     async signUpWithEmailPassword(firstname: string, lastname: string, email: string, password: string): Promise<AppUser> {
         try {
             const userCred = await createUserWithEmailAndPassword(this._auth, email, password)
-            var uid = userCred.user.uid;
+            var id = userCred.user.uid;
 
             var appUser: AppUser = {
-                uid,
+                id,
                 firstname,
                 lastname,
                 email,
                 phone: "",
                 createdOn: Date.now(),
+                updatedOn: Date.now(),
             }
 
-            await setDoc(doc(this._db, 'users', uid), appUser)
+            await setDoc(doc(this._db, 'users', id), appUser)
 
             return appUser;
         } catch (error: any) {
