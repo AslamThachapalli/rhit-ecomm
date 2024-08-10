@@ -11,7 +11,6 @@ import {
   Button,
   Spinner,
   Badge,
-  Chip,
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon, UserIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useRecoilStateLoadable, useRecoilValueLoadable } from "recoil";

@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, increment, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, increment, query, runTransaction, setDoc, where, writeBatch } from "firebase/firestore";
 import { firebaseCore } from "../lib/firebaseCore";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -43,7 +43,7 @@ export async function getCart(userId: string): Promise<Cart> {
         id: cartFromDb.id!,
         userId: cartFromDb.userId!,
         cartItems,
-        quantity: 0,
+        quantity: cartFromDb.quantity!,
     }
 
     const qcItem = query(collection(db, 'carts', cartFromDb.id!, 'cartItems'))
@@ -65,12 +65,14 @@ export async function getCart(userId: string): Promise<Cart> {
 export async function addToCart(cartId: string, item: CartItem) {
     try {
         const cartRef = doc(db, 'carts', cartId)
-        await updateDoc(cartRef, {
-            quantity: increment(1)
-        })
-
         const itemDocRef = doc(db, 'carts', cartId, 'cartItems', item.productId)
-        await setDoc(itemDocRef, item)
+
+        const batch = writeBatch(db)
+
+        batch.update(cartRef, { quantity: increment(1) })
+        batch.set(itemDocRef, item);
+
+        await batch.commit();
     } catch (e) {
         throw new Error('Failed adding to Cart')
     }
@@ -79,13 +81,24 @@ export async function addToCart(cartId: string, item: CartItem) {
 export async function modifyCartItemCount({ cartId, productId, action }: { cartId: string, productId: string, action: 'increment' | 'decrement' }) {
     try {
         const cartRef = doc(db, 'carts', cartId)
-        await updateDoc(cartRef, {
-            quantity: increment(action == 'increment' ? 1 : -1)
-        })
-
         const itemDocRef = doc(db, 'carts', cartId, 'cartItems', productId)
-        await updateDoc(itemDocRef, {
-            quantity: increment(action == 'increment' ? 1 : -1)
+
+        const incrementValue = action === 'increment' ? 1 : -1;
+
+        await runTransaction(db, async (transaction) => {
+            const itemSnap = await transaction.get(itemDocRef)
+
+            if (!itemSnap.exists()) throw "Document does not exist!";
+
+            const { quantity: itemCount } = itemSnap.data() as CartItem
+
+            if (itemCount == 1 && action == 'decrement') {
+                transaction.delete(itemDocRef)
+            } else {
+                transaction.update(itemDocRef, { quantity: increment(incrementValue) })
+            }
+
+            transaction.update(cartRef, { quantity: increment(incrementValue) })
         })
     } catch (e) {
         throw new Error('Failed modifying your cart')
@@ -95,13 +108,20 @@ export async function modifyCartItemCount({ cartId, productId, action }: { cartI
 export async function removeFromCart({ cartId, productId }: { cartId: string, productId: string }) {
     try {
         const itemDocRef = doc(db, 'carts', cartId, 'cartItems', productId)
-        const itemSnap = await getDoc(itemDocRef)
-        const { quantity: itemCount } = itemSnap.data() as CartItem
-        await deleteDoc(itemDocRef)
-
         const cartRef = doc(db, 'carts', cartId)
-        await updateDoc(cartRef, {
-            quantity: increment(-itemCount)
+
+        await runTransaction(db, async (transaction) => {
+            const itemSnap = await transaction.get(itemDocRef)
+
+            if (!itemSnap.exists()) throw "Document does not exist!";
+
+            const { quantity: itemCount } = itemSnap.data() as CartItem
+
+            transaction.delete(itemDocRef)
+
+            transaction.update(cartRef, {
+                quantity: increment(-itemCount)
+            })
         })
     } catch (e) {
         throw new Error('Failed removing from cart')
