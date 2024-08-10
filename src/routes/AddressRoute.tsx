@@ -4,7 +4,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { userState } from "../store/atoms/authStore";
+import { userAtom } from "../store/atoms/authAtoms";
 import { createAddress, deleteAddress, getAllAddress, updateAddress } from "../data/addressData";
 import Toast from "../components/Toast";
 
@@ -70,7 +70,7 @@ interface AddressFormProps {
 }
 
 function AddNewAddressForm({ onCancel, onSaved, onSaveError, address }: AddressFormProps) {
-    const user = useRecoilValue(userState)!;
+    const user = useRecoilValue(userAtom)!;
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -155,7 +155,7 @@ interface AllAddressesProps {
 }
 
 function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }: AllAddressesProps) {
-    const user = useRecoilValue(userState)!;
+    const user = useRecoilValue(userAtom)!;
 
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [deleteState, setDeleteState] = useState<{ showDialog: boolean, deleteId?: string }>({

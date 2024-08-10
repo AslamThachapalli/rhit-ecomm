@@ -2,7 +2,7 @@ import { atom, selector } from "recoil";
 import { Nullable } from "../../lib/globals";
 import { firebaseCore } from "../../lib/firebaseCore";
 
-export const userState = atom<Nullable<AppUser>>({
+export const userAtom = atom<Nullable<AppUser>>({
   key: "userAtom",
   default: selector({
     key: 'userAtomSelector',

@@ -9,15 +9,21 @@ import {
   MenuList,
   MenuItem,
   Button,
+  Spinner,
+  Badge,
+  Chip,
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon, UserIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { useRecoilState } from "recoil";
-import { userState } from "../store/atoms/authStore";
+import { useRecoilStateLoadable, useRecoilValueLoadable } from "recoil";
+import { userAtom } from "../store/atoms/authAtoms";
 import { Link, useNavigate } from "react-router-dom";
 import { firebaseCore } from "../lib/firebaseCore";
+import { cartCountAtom } from "../store/atoms/cartAtoms";
 
 function NavList() {
-  const [user, setUser] = useRecoilState(userState);
+  const [user, setUser] = useRecoilStateLoadable(userAtom);
+  const cartCount = useRecoilValueLoadable(cartCountAtom);
+
   const navigate = useNavigate();
 
   const signOutUser = () => {
@@ -40,26 +46,34 @@ function NavList() {
       </Typography>
 
       {/* Cart Icon */}
-      <IconButton
-        variant="text"
-        className="h-8 w-8 text-inherit hidden lg:inline-block"
-        ripple={true}
-        onClick={() => navigate('/cart')}
-      >
-        <ShoppingCartIcon className="h-6 w-6" />
-      </IconButton>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="lg:hidden inline-block p-1 font-medium">
-        <Link to={'/cart'} className="flex items-center hover:text-blue-500 transition-colors">
-          My Cart
-        </Link>
-      </Typography>
+      <div className="hidden lg:inline-block">
+        <Badge content={`${cartCount.contents}`} invisible={cartCount.state == 'loading' || cartCount.contents == null} color="teal" withBorder>
+          <IconButton
+            variant="text"
+            className="h-8 w-8 text-inherit"
+            ripple={true}
+            onClick={() => navigate('/cart')}
+          >
+            <ShoppingCartIcon className="h-6 w-6" />
+          </IconButton>
+        </Badge>
+      </div>
+
+      <div className="flex justify-start items-center space-x-4 lg:hidden">
+        <Typography
+          as="li"
+          variant="small"
+          color="blue-gray"
+          className=" p-1 font-medium">
+          <Link to={'/cart'} className="flex items-center hover:text-blue-500 transition-colors">
+            My Cart
+          </Link>
+        </Typography>
+        <Badge content={`${cartCount.contents}`} invisible={cartCount.state == 'loading' || cartCount.contents == null} color="teal" withBorder><div /></Badge>
+      </div>
 
       {/* Orders */}
-      {user && <Typography
+      {/* {user && <Typography
         as="li"
         variant="small"
         color="blue-gray"
@@ -67,11 +81,13 @@ function NavList() {
         <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
           My Order
         </a>
-      </Typography>}
+      </Typography>} */}
 
-      {/* Login and Account Icon */}
-      {
-        user ?
+      {/* Login Button Or Account Icon */}
+      {user.state == 'loading' ?
+        <Spinner color="teal" />
+        :
+        user.contents ?
           <>
             <Menu placement="bottom-end">
               <MenuHandler>
@@ -135,6 +151,8 @@ function NavList() {
 }
 
 export default function Header() {
+  const user = useRecoilValueLoadable(userAtom);
+
   const [openNav, setOpenNav] = React.useState(false);
 
   const handleWindowResize = () =>
@@ -161,17 +179,21 @@ export default function Header() {
         <div className="hidden lg:block">
           <NavList />
         </div>
-        <IconButton
-          variant="text"
-          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-          ripple={false}
-          onClick={() => setOpenNav(!openNav)}        >
-          {openNav ? (
-            <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-          ) : (
-            <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-          )}
-        </IconButton>
+        {
+          user.state == 'loading' ?
+            <Spinner color="teal" className="lg:hidden" /> :
+            <IconButton
+              variant="text"
+              className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+              ripple={false}
+              onClick={() => setOpenNav(!openNav)}        >
+              {openNav ? (
+                <XMarkIcon className="h-6 w-6" strokeWidth={2} />
+              ) : (
+                <Bars3Icon className="h-6 w-6" strokeWidth={2} />
+              )}
+            </IconButton>
+        }
       </div>
       <Collapse open={openNav}>
         <NavList />

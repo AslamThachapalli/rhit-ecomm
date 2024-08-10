@@ -17,7 +17,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { firebaseCore } from "../lib/firebaseCore";
 import { useSetRecoilState } from "recoil";
-import { userState } from "../store/atoms/authStore";
+import { userAtom } from "../store/atoms/authAtoms";
 
 const theme = {
     list: {
@@ -40,7 +40,7 @@ export default function AccountRoute() {
     const currentPath = location.pathname;
 
     const [showLogoutDialog, setShowLogoutDialog] = useState(false);
-    const setUser = useSetRecoilState(userState);
+    const setUser = useSetRecoilState(userAtom);
 
     const [selectedIndex, setSelectedIndex] = useState(currentPath === '/account/address' ? 2 : 1);
 

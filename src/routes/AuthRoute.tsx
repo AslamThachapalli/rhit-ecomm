@@ -2,7 +2,7 @@ import { Button, Card, Input, Typography, IconButton } from "@material-tailwind/
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { userState } from "../store/atoms/authStore";
+import { userAtom } from "../store/atoms/authAtoms";
 import { useLocation, useNavigate } from "react-router-dom";
 import { firebaseCore } from "../lib/firebaseCore";
 import Toast from "../components/Toast";
@@ -55,7 +55,7 @@ interface SigninFormProps {
 function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
     let navigate = useNavigate();
     let location = useLocation();
-    let setUser = useSetRecoilState(userState);
+    let setUser = useSetRecoilState(userAtom);
 
     let [loading, setLoading] = useState(false);
 
@@ -162,7 +162,7 @@ interface SignupFormProps {
 function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
     let navigate = useNavigate();
     let location = useLocation();
-    let setUser = useSetRecoilState(userState);
+    let setUser = useSetRecoilState(userAtom);
 
     let [loading, setLoading] = useState(false);
     let [showPassword, setShowPassword] = useState(false);
