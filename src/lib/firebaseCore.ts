@@ -1,8 +1,7 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { firebaseConfig } from "../firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, Auth, signOut } from "firebase/auth";
-import { Firestore, getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
-import { Nullable } from "./globals";
+import { getAuth, Auth, } from "firebase/auth";
+import { Firestore, getFirestore } from "firebase/firestore";
 
 class FirebaseCore {
     private static _instance: FirebaseCore;
@@ -31,70 +30,6 @@ class FirebaseCore {
 
     get auth() {
         return this._auth;
-    }
-
-    async currentUser(): Promise<Nullable<AppUser>> {
-
-        const user = this._auth.currentUser;
-
-        if (!user) {
-            return null
-        }
-
-        const id = user.uid;
-
-        const docRef = doc(this._db, 'users', id)
-        const docSnap = await getDoc(docRef)
-
-        if (docSnap.exists()) {
-            return docSnap.data() as AppUser
-        } else {
-            return null
-        }
-    }
-
-    async signUpWithEmailPassword(firstname: string, lastname: string, email: string, password: string): Promise<AppUser> {
-        try {
-            const userCred = await createUserWithEmailAndPassword(this._auth, email, password)
-            var id = userCred.user.uid;
-
-            var appUser: AppUser = {
-                id,
-                firstname,
-                lastname,
-                email,
-                phone: "",
-                createdOn: Date.now(),
-                updatedOn: Date.now(),
-            }
-
-            await setDoc(doc(this._db, 'users', id), appUser)
-
-            return appUser;
-        } catch (error: any) {
-            throw new Error(error.code);
-        }
-    }
-
-    async signInWithEmailPassword(email: string, password: string): Promise<Nullable<AppUser>> {
-        try {
-            const userCred = await signInWithEmailAndPassword(this._auth, email, password)
-
-            const docRef = doc(this._db, 'users', userCred.user.uid)
-            const docSnap = await getDoc(docRef)
-
-            if (docSnap.exists()) {
-                return docSnap.data() as AppUser
-            } else {
-                return null
-            }
-        } catch (error: any) {
-            throw new Error(error.code);
-        }
-    }
-
-    async signOutUser() {
-        signOut(this._auth);
     }
 }
 

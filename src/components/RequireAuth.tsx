@@ -1,8 +1,6 @@
-import { useRecoilValue, useRecoilValueLoadable } from "recoil";
+import { useRecoilValueLoadable } from "recoil";
 import { userAtom } from "../store/atoms/authAtoms";
 import { Navigate, useLocation } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { firebaseCore } from "../lib/firebaseCore";
 
 export default function RequireAuth({ children }: { children: JSX.Element }) {
   let user = useRecoilValueLoadable(userAtom);

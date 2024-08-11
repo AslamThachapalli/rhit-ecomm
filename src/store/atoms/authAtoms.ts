@@ -1,6 +1,6 @@
 import { atom, selector } from "recoil";
 import { Nullable } from "../../lib/globals";
-import { firebaseCore } from "../../lib/firebaseCore";
+import { currentUser } from "../../data/authData";
 
 export const userAtom = atom<Nullable<AppUser>>({
   key: "userAtom",
@@ -8,7 +8,7 @@ export const userAtom = atom<Nullable<AppUser>>({
     key: 'userAtomSelector',
     get: async () => {
       await new Promise(res => setTimeout(res, 1000));
-      const user = await firebaseCore.currentUser()
+      const user = await currentUser()
       return user;
     }
   }),

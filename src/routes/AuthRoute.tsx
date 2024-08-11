@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { userAtom } from "../store/atoms/authAtoms";
 import { useLocation, useNavigate } from "react-router-dom";
-import { firebaseCore } from "../lib/firebaseCore";
 import Toast from "../components/Toast";
+import { signInWithEmailPassword, signUpWithEmailPassword } from "../data/authData";
 
 export default function AuthRoute() {
     const [newUser, setNewUser] = useState(false)
@@ -73,7 +73,7 @@ function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
         setLoading(true);
 
         try {
-            const user = await firebaseCore.signInWithEmailPassword(email, password);
+            const user = await signInWithEmailPassword(email, password);
             setLoading(false)
             if (!user) {
                 onError('User not registered')
@@ -181,7 +181,7 @@ function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
         setLoading(true)
 
         try {
-            const user = await firebaseCore.signUpWithEmailPassword(firstname, lastname, email, password);
+            const user = await signUpWithEmailPassword(firstname, lastname, email, password);
             setLoading(false)
             setUser(user);
             navigate(from, { replace: true });

@@ -16,8 +16,8 @@ import { Bars3Icon, XMarkIcon, UserIcon, ShoppingCartIcon } from "@heroicons/rea
 import { useRecoilStateLoadable, useRecoilValueLoadable } from "recoil";
 import { userAtom } from "../store/atoms/authAtoms";
 import { Link, useNavigate } from "react-router-dom";
-import { firebaseCore } from "../lib/firebaseCore";
 import { cartCountAtom } from "../store/atoms/cartAtoms";
+import { signOutUser } from "../data/authData";
 
 function NavList() {
   const [user, setUser] = useRecoilStateLoadable(userAtom);
@@ -25,8 +25,8 @@ function NavList() {
 
   const navigate = useNavigate();
 
-  const signOutUser = () => {
-    firebaseCore.signOutUser()
+  const signOut = () => {
+    signOutUser()
 
     setUser(null);
   }
@@ -107,7 +107,7 @@ function NavList() {
                   My Orders
                 </MenuItem>
                 <hr className="my-3" />
-                <MenuItem onClick={() => signOutUser()}>
+                <MenuItem onClick={() => signOut()}>
                   Sign out
                 </MenuItem>
               </MenuList>
