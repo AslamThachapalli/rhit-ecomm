@@ -1,12 +1,14 @@
-import { Button, Card, Checkbox, Dialog, DialogBody, DialogFooter, Input, Typography } from "@material-tailwind/react";
+import { Button, Card, Dialog, DialogBody, DialogFooter, Typography } from "@material-tailwind/react";
 import {
     PlusIcon
 } from "@heroicons/react/24/solid";
-import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userAtom } from "../store/atoms/authAtoms";
-import { createAddress, deleteAddress, getAllAddress, updateAddress } from "../data/addressData";
+import { deleteAddress, getAllAddress, updateAddress } from "../data/addressData";
 import Toast from "../components/Toast";
+import { addressAtom } from "../store/atoms/addressAtoms";
+import AddNewAddressForm from "../components/AddNewAddressForm";
 
 export default function AddressRoute() {
     const [newAddress, setNewAddress] = useState<{ add: boolean, currentAddress?: Address }>({
@@ -62,92 +64,6 @@ export default function AddressRoute() {
     )
 }
 
-interface AddressFormProps {
-    onCancel: () => void;
-    onSaved: () => void;
-    onSaveError: (message: string) => void;
-    address?: Address
-}
-
-function AddNewAddressForm({ onCancel, onSaved, onSaveError, address }: AddressFormProps) {
-    const user = useRecoilValue(userAtom)!;
-
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-
-        const formData = new FormData(e.currentTarget)
-        const name = formData.get('name')
-        const phone = formData.get('phone')
-        const email = formData.get('email')
-        const pincode = formData.get('pincode')
-        const city = formData.get('city')
-        const state = formData.get('state')
-        const addressStr = formData.get('address')
-        const landmark = formData.get('landmark')
-        const isDefault = formData.get('isDefault')
-
-        const newAddress: Partial<Address> = {
-            userId: user?.id,
-            name: name?.toString(),
-            phone: phone?.toString(),
-            email: email?.toString(),
-            pincode: pincode?.toString(),
-            city: city?.toString(),
-            state: state?.toString(),
-            address: addressStr?.toString(),
-            landmark: landmark?.toString(),
-            isDefault: isDefault === 'on',
-        }
-
-        try {
-            const alladdresses = await getAllAddress(user.id);
-            const defaultAddress = alladdresses.find((a) => a.isDefault)
-
-            if (defaultAddress && isDefault === 'on') {
-                defaultAddress.isDefault = false
-                await updateAddress(defaultAddress)
-            }
-
-            if (address) {
-                newAddress.id = address.id
-
-                await updateAddress(newAddress);
-            } else {
-                await createAddress(newAddress)
-            }
-            onSaved()
-        } catch (e: any) {
-            console.log(e)
-            onSaveError(e.message);
-        }
-    }
-
-    return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 gap-6">
-                <Input name="name" color="teal" defaultValue={address?.name} required label="Full Name" size="lg" />
-                <Input name="phone" defaultValue={address?.phone} required type="number" label="Mobile number" size="lg" />
-                <Input name="email" defaultValue={address?.email} required type="email" label="Email" size="lg" />
-                <Input name="pincode" defaultValue={address?.pincode} required type="number" label="Pincode" size="lg" />
-                <Input name="city" defaultValue={address?.city} required label="Town / City" size="lg" />
-                <Input name="state" defaultValue={address?.state} required label="State" size="lg" />
-            </div>
-            <Input name="address" defaultValue={address?.address} required label="Address" size="lg" />
-            <Input name="landmark" defaultValue={address?.landmark} label="Landmark" size="lg" />
-            <Checkbox name="isDefault" color="teal" defaultChecked={address?.isDefault} label="Set as default" />
-            <div className="flex justify-end gap-2">
-                <Button variant="text" color="teal" onClick={() => onCancel()}>
-                    Cancel
-                </Button>
-
-                <Button type="submit" color="teal">
-                    Save Address
-                </Button>
-            </div>
-        </form>
-    )
-}
-
 interface AllAddressesProps {
     onAddNewAddressPressed: () => void;
     onError: (message: string) => void;
@@ -155,35 +71,34 @@ interface AllAddressesProps {
 }
 
 function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }: AllAddressesProps) {
-    const user = useRecoilValue(userAtom)!;
+    const user = useRecoilValue(userAtom)!
+    const [addresses, setAddresses] = useRecoilState(addressAtom)!;
 
-    const [addresses, setAddresses] = useState<Address[]>([]);
     const [deleteState, setDeleteState] = useState<{ showDialog: boolean, deleteId?: string }>({
         showDialog: false
     });
 
-    useEffect(() => {
-        getAllAddress(user.id).then((result) => {
-            setAddresses(result)
-        }).catch((e) => {
-            onError(e.message)
-        })
-    }, [])
-
     async function handleSetAsDefault(newDefault: Address) {
         try {
-            const prevDefault = addresses.find((x) => x.isDefault)!;
+            let prevDefault = addresses.find((x) => x.isDefault)!;
             if (prevDefault) {
-                prevDefault.isDefault = false;
+                prevDefault = {
+                    ...prevDefault,
+                    isDefault : false
+                };
             }
-            newDefault.isDefault = true
+
+            newDefault = {
+                ...newDefault,
+                isDefault: true
+            }
 
             await Promise.all([
                 updateAddress(prevDefault),
                 updateAddress(newDefault),
             ])
 
-            const allAddresses = await getAllAddress(user?.id)
+            const allAddresses = await getAllAddress(user.id)
             setAddresses(allAddresses)
         } catch (e: any) {
             onError(e.message)
@@ -193,8 +108,8 @@ function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }:
     async function handleDelete() {
         try {
             await deleteAddress(deleteState.deleteId!);
-            const allAddresses = await getAllAddress(user?.id)
-            setAddresses(allAddresses)
+            // const allAddresses = await getAllAddress(user?.id)
+            setAddresses((addresses) => addresses.filter((address) => address.id != deleteState.deleteId))
         } catch (e: any) {
             onError(e.message)
         }

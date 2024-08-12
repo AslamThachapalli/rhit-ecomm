@@ -1,12 +1,17 @@
 import { Button, Typography } from "@material-tailwind/react";
-import { useRecoilState } from "recoil";
-import { cartAtom } from "../store/atoms/cartAtoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { cartAtom, cartCountAtom, cartPriceAtom } from "../store/atoms/cartAtoms";
 import { modifyCartItemCount, removeFromCart } from "../data/cartData";
+import { useNavigate } from "react-router-dom";
 
 export default function CartRoute() {
     const [cart, setCart] = useRecoilState(cartAtom);
+    const cartCount = useRecoilValue(cartCountAtom);
+    const cartPrice = useRecoilValue(cartPriceAtom);
 
-    const cartItems = cart?.cartItems;
+    const navigate = useNavigate();
+
+    const cartitems = cart?.cartItems;
 
     async function handleRemoveFromCart(productId: string) {
         await removeFromCart({ cartId: cart!.id, productId })
@@ -23,7 +28,7 @@ export default function CartRoute() {
         })
     }
 
-    async function handleQuantityModification(productId: string, toIncrement: boolean) {
+    async function handleQuantityModification(productId: string, { toIncrement }: { toIncrement: boolean }) {
         await modifyCartItemCount({ cartId: cart!.id, productId, action: toIncrement ? 'increment' : 'decrement' })
 
         setCart((cart) => {
@@ -64,7 +69,7 @@ export default function CartRoute() {
                     <hr className="h-0.5 bg-black/60 my-2" />
 
                     {
-                        cartItems?.map((item) => {
+                        cartitems?.map((item) => {
                             return <div key={item.productId} className="grid grid-cols-10">
                                 <div className="col-span-4 flex space-x-2">
                                     <div>{item.productId}</div>
@@ -74,11 +79,11 @@ export default function CartRoute() {
                                 </div>
                                 <div className="col-span-2 flex justify-center space-x-2">
                                     <div className="cursor-pointer" onClick={() => {
-                                        handleQuantityModification(item.productId, false)
+                                        handleQuantityModification(item.productId, { toIncrement: false })
                                     }}>-</div>
                                     <div>{item.quantity}</div>
                                     <div className="cursor-pointer" onClick={() => {
-                                        handleQuantityModification(item.productId, true)
+                                        handleQuantityModification(item.productId, { toIncrement: true })
                                     }}>+</div>
                                 </div>
                                 <div className="col-span-2 flex justify-center">
@@ -99,8 +104,8 @@ export default function CartRoute() {
                         </Typography>
 
                         <div className="flex justify-between">
-                            <Typography>Price</Typography>
-                            <Typography>33,444</Typography>
+                            <Typography>{`Price (${cartCount} items)`}</Typography>
+                            <Typography>{`${cartPrice}`}</Typography>
                         </div>
 
                         <div className="flex justify-between">
@@ -115,7 +120,7 @@ export default function CartRoute() {
                             <Typography>20</Typography>
                         </div>
 
-                        <Button color="teal" fullWidth className="mt-6">Checkout</Button>
+                        <Button color="teal" fullWidth className="mt-6" onClick={() => navigate('/checkout')}>Checkout</Button>
                     </div>
                 </div>
             </div>

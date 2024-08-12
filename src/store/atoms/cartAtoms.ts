@@ -18,15 +18,26 @@ export const cartAtom = atom<Nullable<Cart>>({
     })
 })
 
-export const cartCountAtom = atom<Nullable<number>>({
-    key: 'cartCountAtom',
-    default: selector({
-        key: 'cartCountAtomSelector',
-        get: ({get}) =>{
-            const cart = get(cartAtom)
-            if(!cart) return null;
+export const cartCountAtom = selector({
+    key: 'cartCountAtomSelector',
+    get: ({get}) =>{
+        const cart = get(cartAtom)
+        if(!cart) return null;
 
-            return cart.quantity;
-        }
-    })
+        return cart.quantity;
+    }
+})
+
+export const cartPriceAtom = selector<Nullable<number>>({
+    key: 'cartPriceAtomSelector',
+    get: ({get}) => {
+        const cart = get(cartAtom)
+
+        let price: number = 0
+        cart?.cartItems.forEach((item) => {
+            price += (item.price * item.quantity)
+        })
+
+        return price
+    }
 })

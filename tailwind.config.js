@@ -12,9 +12,6 @@ export default withMT({
       'error': '#B00020'
     },
     extend: {
-      backgroundImage: {
-        'auth-bg': "url('/images/auth-page-bg-img.png')",
-      },
       keyframes: {
         'slide-in-left': {
           '0%': {transform: 'translateX(100%)'},

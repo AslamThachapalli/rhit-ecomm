@@ -15,9 +15,9 @@ import {
 } from "@heroicons/react/24/solid";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { firebaseCore } from "../lib/firebaseCore";
 import { useSetRecoilState } from "recoil";
 import { userAtom } from "../store/atoms/authAtoms";
+import { signOutUser } from "../data/authData";
 
 const theme = {
     list: {
@@ -46,8 +46,8 @@ export default function AccountRoute() {
 
     const cancelLogout = () => setShowLogoutDialog(false);
 
-    const signOutUser = () => {
-        firebaseCore.signOutUser()
+    const signOut = () => {
+        signOutUser()
         navigate('/')
         setUser(null)
     }
@@ -67,7 +67,7 @@ export default function AccountRoute() {
                     <Button
                         variant="gradient"
                         color="teal"
-                        onClick={signOutUser}>
+                        onClick={signOut}>
                         <span>Confirm</span>
                     </Button>
                 </DialogFooter>
