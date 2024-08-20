@@ -59,12 +59,13 @@ interface CartItem {
     price: number;
 }
 
-type OrderStatus = 'created' | 'attempted' | 'paid';
+type OrderStatus = 'pending' | 'cancelled' | 'failed' | 'unverified' | 'paid';
 
 interface Order {
     id: string;
     userId: string;
     providerOrderId: string;
+    paymentId: string;
     status: OrderStatus;
     addressId: string;
     totalAmount: number;

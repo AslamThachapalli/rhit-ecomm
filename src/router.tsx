@@ -9,7 +9,9 @@ import AccountRoute from './routes/AccountRoute.tsx'
 import MyProfileRoute from './routes/MyProfileRoute.tsx'
 import AddressRoute from './routes/AddressRoute.tsx'
 import ErrorRoute from './routes/ErrorRoute.tsx'
-import Checkout from './routes/CheckoutRoute.tsx'
+import CheckoutRoute from './routes/CheckoutRoute.tsx'
+import OrderSuccessRoute from './routes/OrderSuccessRoute.tsx'
+import MyOrdersRoute from './routes/MyOrdersRoute.tsx'
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +34,10 @@ export const router = createBrowserRouter([
           {
             path: 'address',
             element: <AddressRoute />
+          }, 
+          {
+            path: 'my-orders',
+            element: <MyOrdersRoute />
           }
         ]
       },
@@ -41,7 +47,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'checkout',
-        element: <RequireAuth><Checkout /></RequireAuth>
+        element: <RequireAuth><CheckoutRoute /></RequireAuth>
+      },
+      {
+        path: 'order-success/:orderId',
+        element: <RequireAuth><OrderSuccessRoute /></RequireAuth>
       }
     ]
   },
