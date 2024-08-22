@@ -55,7 +55,6 @@ export async function getAllOrders(userId: string): Promise<Order[]> {
 
         return orders
     } catch (e) {
-        console.error(e)
         throw new Error("Failed fetching your orders")
     }
 }

@@ -71,6 +71,7 @@ interface Order {
     totalAmount: number;
     createdAt: number;
     updatedAt: number;
+    quantity: number;
     orderItems: OrderItem[];
 }
 

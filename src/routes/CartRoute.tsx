@@ -47,8 +47,11 @@ export default function CartRoute() {
     }
 
     return (
-        <>
+        <div className="mx-auto mt-10 lg:max-w-screen-xl px-6 py-3">
             <Typography variant="h2" className="flex justify-center mt-4">Cart</Typography>
+
+            <hr className="my-4" />
+            
             <div className="mx-auto lg:max-w-screen-xl my-4 grid grid-cols-12">
                 <div className="col-span-8 mx-4">
                     <div className="grid grid-cols-10">
@@ -124,6 +127,6 @@ export default function CartRoute() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }

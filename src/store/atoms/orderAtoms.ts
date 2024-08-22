@@ -12,7 +12,6 @@ export const allOrdersAtom = atom<Order[]>({
             if (!user) return []
 
             const allOrders = await getAllOrders(user.id);
-            console.log('allOrders', allOrders)
             return allOrders
         }
     })
@@ -22,7 +21,6 @@ export const getOrderAtom = selectorFamily({
     key: "getOrderAtomSelector",
     get: id => ({ get }) => {
         const allOrders = get(allOrdersAtom)
-        console.log('getOrderAtomSelector', allOrders)
 
         return allOrders.find(order => order.id == id)
     }

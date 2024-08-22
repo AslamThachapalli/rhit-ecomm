@@ -3,11 +3,12 @@ import { userAtom } from "../store/atoms/authAtoms";
 import { addressAtom } from "../store/atoms/addressAtoms";
 import { Button, Checkbox, Input } from "@material-tailwind/react";
 import { createAddress, getAllAddress, updateAddress } from "../data/addressData";
+import toast from "react-hot-toast";
 
 interface AddressFormProps {
     onCancel: () => void;
     onSaved: () => void;
-    onSaveError: (message: string) => void;
+    onSaveError?: (message: string) => void;
     address?: Address
 }
 
@@ -63,8 +64,11 @@ export default function AddNewAddressForm({ onCancel, onSaved, onSaveError, addr
             setAddresses(newAlladdresses)
             onSaved()
         } catch (e: any) {
-            console.log(e)
-            onSaveError(e.message);
+            toast.error(e.message)
+            
+            if(onSaveError){
+                onSaveError(e.message);
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import { userAtom } from "../store/atoms/authAtoms";
 import { useLocation, useNavigate } from "react-router-dom";
 import Toast from "../components/Toast";
 import { signInWithEmailPassword, signUpWithEmailPassword } from "../data/authData";
+import toast from "react-hot-toast";
 
 export default function AuthRoute() {
     const [newUser, setNewUser] = useState(false)
@@ -28,18 +29,8 @@ export default function AuthRoute() {
             <div className="bg-surface bg-cover bg-no-repeat h-screen flex justify-center items-center overflow-scroll" >
                 <Card className="p-8 bg-white backdrop-blur-sm">
                     {newUser ?
-                        <SignupForm
-                            onSigninPressed={() => setNewUser(false)}
-                            onError={(message) => setError({
-                                show: true,
-                                message: message
-                            })} /> :
-                        <SigninForm
-                            onSignupPressed={() => setNewUser(true)}
-                            onError={(message) => setError({
-                                show: true,
-                                message: message
-                            })} />}
+                        <SignupForm onSigninPressed={() => setNewUser(false)} /> :
+                        <SigninForm onSignupPressed={() => setNewUser(true)} />}
                 </Card>
             </div>
         </>
@@ -49,10 +40,9 @@ export default function AuthRoute() {
 
 interface SigninFormProps {
     onSignupPressed: () => void
-    onError: (message: string) => void
 }
 
-function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
+function SigninForm({ onSignupPressed }: SigninFormProps) {
     let navigate = useNavigate();
     let location = useLocation();
     let setUser = useSetRecoilState(userAtom);
@@ -76,7 +66,7 @@ function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
             const user = await signInWithEmailPassword(email, password);
             setLoading(false)
             if (!user) {
-                onError('User not registered')
+                toast.error("User not registered")
                 return;
             }
 
@@ -84,7 +74,7 @@ function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
             navigate(from, { replace: true });
         } catch (e: any) {
             setLoading(false)
-            onError(e.message)
+            toast.error(e.message)
         }
     }
 
@@ -156,10 +146,9 @@ function SigninForm({ onSignupPressed, onError }: SigninFormProps) {
 
 interface SignupFormProps {
     onSigninPressed: () => void
-    onError: (message: string) => void
 }
 
-function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
+function SignupForm({ onSigninPressed }: SignupFormProps) {
     let navigate = useNavigate();
     let location = useLocation();
     let setUser = useSetRecoilState(userAtom);
@@ -187,13 +176,12 @@ function SignupForm({ onSigninPressed, onError }: SignupFormProps) {
             navigate(from, { replace: true });
         } catch (e: any) {
             setLoading(false)
-            onError(e.message)
+            toast.error(e.message)
         }
     }
 
     return (
         <>
-
             <Typography variant="h4" color="blue-gray">
                 Sign Up
             </Typography>

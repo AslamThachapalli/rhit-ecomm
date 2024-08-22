@@ -103,7 +103,7 @@ function NavList() {
                 <MenuItem onClick={() => navigate('/account')}>
                   Account Details
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={() => navigate('/account/my-orders')}>
                   My Orders
                 </MenuItem>
                 <hr className="my-3" />

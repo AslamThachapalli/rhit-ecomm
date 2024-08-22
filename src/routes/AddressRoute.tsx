@@ -2,33 +2,21 @@ import { Button, Card, Dialog, DialogBody, DialogFooter, Typography } from "@mat
 import {
     PlusIcon
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userAtom } from "../store/atoms/authAtoms";
 import { deleteAddress, getAllAddress, updateAddress } from "../data/addressData";
-import Toast from "../components/Toast";
 import { addressAtom } from "../store/atoms/addressAtoms";
 import AddNewAddressForm from "../components/AddNewAddressForm";
+import toast from "react-hot-toast";
 
 export default function AddressRoute() {
     const [newAddress, setNewAddress] = useState<{ add: boolean, currentAddress?: Address }>({
         add: false
     })
-    const [showError, setShowError] = useState<{ show: boolean, message: string }>({
-        show: false,
-        message: ''
-    })
 
     return (
         <>
-            {showError.show && <Toast
-                message={showError.message}
-                onClose={() => setShowError({
-                    show: false,
-                    message: ''
-                })}
-            />}
-
             <Card className="p-14 min-h-[75vh]">
                 {
                     newAddress.add ?
@@ -39,25 +27,9 @@ export default function AddressRoute() {
                             onSaved={() => setNewAddress({
                                 add: false
                             })}
-                            onSaveError={(message) => setShowError({
-                                show: true,
-                                message,
-                            })}
                             address={newAddress.currentAddress}
                         />
-                        : <AllAddresses
-                            onAddNewAddressPressed={() => setNewAddress({
-                                add: true
-                            })}
-                            onError={(message) => setShowError({
-                                show: true,
-                                message,
-                            })}
-                            onEditAddressPressed={(address) => setNewAddress({
-                                add: true,
-                                currentAddress: address,
-                            })}
-                        />
+                        : <AllAddresses setNewAddress={setNewAddress} />
                 }
             </Card>
         </>
@@ -65,12 +37,13 @@ export default function AddressRoute() {
 }
 
 interface AllAddressesProps {
-    onAddNewAddressPressed: () => void;
-    onError: (message: string) => void;
-    onEditAddressPressed: (address: Address) => void;
+    setNewAddress: Dispatch<SetStateAction<{
+        add: boolean;
+        currentAddress?: Address;
+    }>>
 }
 
-function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }: AllAddressesProps) {
+function AllAddresses({ setNewAddress }: AllAddressesProps) {
     const user = useRecoilValue(userAtom)!
     const [addresses, setAddresses] = useRecoilState(addressAtom)!;
 
@@ -84,7 +57,7 @@ function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }:
             if (prevDefault) {
                 prevDefault = {
                     ...prevDefault,
-                    isDefault : false
+                    isDefault: false
                 };
             }
 
@@ -101,17 +74,16 @@ function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }:
             const allAddresses = await getAllAddress(user.id)
             setAddresses(allAddresses)
         } catch (e: any) {
-            onError(e.message)
+            toast.error(e.message)
         }
     }
 
     async function handleDelete() {
         try {
             await deleteAddress(deleteState.deleteId!);
-            // const allAddresses = await getAllAddress(user?.id)
             setAddresses((addresses) => addresses.filter((address) => address.id != deleteState.deleteId))
         } catch (e: any) {
-            onError(e.message)
+            toast.error(e.message)
         }
 
         setDeleteState({ showDialog: false })
@@ -172,14 +144,26 @@ function AllAddresses({ onAddNewAddressPressed, onError, onEditAddressPressed }:
                             <Typography variant="small" onClick={() => showDeleteConfirmation(address.id)} className="invisible group-hover:visible hover:cursor-pointer hover:text-yellow-800 text-gray-900">
                                 Delete
                             </Typography>
-                            <Typography variant="small" onClick={() => onEditAddressPressed(address)} className="invisible group-hover:visible hover:cursor-pointer hover:text-yellow-800 text-gray-900">
+                            <Typography
+                                variant="small"
+                                onClick={() => setNewAddress({
+                                    add: true,
+                                    currentAddress: address,
+                                })}
+                                className="invisible group-hover:visible hover:cursor-pointer hover:text-yellow-800 text-gray-900"
+                            >
                                 Edit
                             </Typography>
                         </div>
                     </div>)
             }
 
-            <div onClick={() => onAddNewAddressPressed()} className="border border-gray-300 h-40 rounded flex flex-col justify-center items-center hover:border-gray-900 text-gray-400 hover:text-gray-900 hover:cursor-pointer">
+            <div
+                onClick={() => setNewAddress({
+                    add: true
+                })}
+                className="border border-gray-300 h-40 rounded flex flex-col justify-center items-center hover:border-gray-900 text-gray-400 hover:text-gray-900 hover:cursor-pointer"
+            >
                 <PlusIcon className="h-8 w-8" />
                 <Typography variant="paragraph" color="gray">
                     Add a new address
