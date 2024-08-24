@@ -13,6 +13,8 @@ Stack:
 Payment Gateway: Razorpay \
 For Delivery: Shiprocket
 
+Backend Repo &#8594; [Click Here](https://github.com/AslamThachapalli/serverless)
+
 Features: 
 - [x] Authentication
 - [ ] Products Page - Products will be categorised
@@ -30,4 +32,4 @@ Features:
   - [ ] Adding products to the DB and modifying them
 - [ ] Contact us page
 
-- [ ] Polishing the UI
+*PS: More features will be added on scale*
