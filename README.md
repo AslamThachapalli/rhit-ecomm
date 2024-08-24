@@ -1,30 +1,33 @@
-# React + TypeScript + Vite
+# E-Commerce App
+### The app is under active development
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Stack: 
+- React
+- Typescript
+- TailwindCSS + Material Tailwind
+- Recoil
+- Firebase
+- Hono
+- Cloudflare workers
 
-Currently, two official plugins are available:
+Payment Gateway: Razorpay \
+For Delivery: Shiprocket
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Features: 
+- [x] Authentication
+- [ ] Products Page - Products will be categorised
+- [ ] Product Detail Page
+- [ ] Managing Addresses
+- [x] Add to Cart
+- [x] View and Modify cart
+- [x] Checkout
+- [x] Payment gateway
+- [ ] Place order on shiprocket on payment success
+- [ ] Email notification to the seller on order placement by the customer
+- [x] View Orders
+- [ ] Track order status
+- [ ] Admin Flow for:
+  - [ ] Adding products to the DB and modifying them
+- [ ] Contact us page
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- [ ] Polishing the UI
