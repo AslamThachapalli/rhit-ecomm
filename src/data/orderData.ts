@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, orderBy, query, where, writeBatch } from "firebase/firestore";
+import { collection, doc, getDocs, orderBy, query, updateDoc, where, writeBatch } from "firebase/firestore";
 import { firebaseCore } from "../lib/firebaseCore";
 
 const db = firebaseCore.db;
@@ -29,6 +29,16 @@ export async function createOrder(order: Partial<Order>): Promise<Order> {
         return order as Order
     } catch (e) {
         throw new Error("Failed creating order in db")
+    }
+}
+
+export async function updateOrder(order: Partial<Order>){
+    try{
+        order.updatedAt = Date.now()
+        
+        await updateDoc(doc(db, "orders", order.id!), {...order})
+    }catch(e){
+        throw new Error("Failed updating your order status")
     }
 }
 

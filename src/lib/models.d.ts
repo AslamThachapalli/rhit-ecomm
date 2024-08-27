@@ -25,10 +25,12 @@ interface Address {
     isDefault: boolean;
     name: string;
     phone: string;
+    alternateNumber: string;
     email: string;
     pincode: string;
     city: string;
     state: string;
+    country: string;
     address: string;
     landmark: string;
 }
@@ -59,36 +61,28 @@ interface CartItem {
     price: number;
 }
 
-type OrderStatus = 'pending' | 'cancelled' | 'failed' | 'unverified' | 'paid';
+type OrderStatus = 'pending' | 'cancelled' | 'failed' | 'unverified' | 'paid' | 'refund initiated' | 'refunded' | 'refund failed';
 
 interface Order {
     id: string;
     userId: string;
     providerOrderId: string;
-    paymentId: string;
+    paymentId?: string;
     status: OrderStatus;
     addressId: string;
     totalAmount: number;
-    createdAt: number;
-    updatedAt: number;
     quantity: number;
     orderItems: OrderItem[];
+    deliveryId?: string;
+    shippingId?: string;
+    isRefunded?: boolean;
+    refundId?: string;
+    createdAt: number;
+    updatedAt?: number;
 }
 
 interface OrderItem {
     productId: string;
     quantity: number;
     price: number;
-}
-
-type PaymentStatus = "created" | "authorized" | "captured" | "refunded" | "failed";
-
-interface Payment {
-    id: string;
-    userId: string;
-    providerPaymentId: string;
-    orderId: string;
-    status: PaymentStatus;
-    createdAt: number;
-    updatedAt: number;
 }

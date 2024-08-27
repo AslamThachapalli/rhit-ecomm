@@ -1,6 +1,6 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
-import { createOrder } from "../data/orderData";
+import { createOrder, updateOrder } from "../data/orderData";
 import { baseUrl, rzrpKeyId } from "../lib/global.vars";
 import { v4 as uuid } from "uuid";
 import { SetterOrUpdater } from "recoil";
@@ -31,21 +31,11 @@ interface PaymentProps {
 
 export async function initiatePayment({ amountPayable, orderSetter, addressId, user, cart, navigate }: PaymentProps) {
 
-    const updateOrdersState = (order: Order) => {
-        orderSetter((allOrders) => {
-            return [order, ...allOrders];
-        })
-    }
-
-    const createOrderAndUpdateState = async (orderObject: Partial<Order>): Promise<boolean> => {
+    const updateOrderState = async (orderObject: Partial<Order>) => {
         try {
-            const order = await createOrder(orderObject)
-            updateOrdersState(order)
-
-            return true
+            await updateOrder(orderObject)
         } catch (e) {
-            toast.error("Failed creating order in server. Please contact support.")
-            return false
+            toast.error("Failed updating your order status. Please contact support.")
         }
     }
 
@@ -58,6 +48,13 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
 
     const checkoutAmount: number = amountPayable * 100
     const receiptId: string = uuid()
+    const orderItems: OrderItem[] = cart.cartItems.map((item) => {
+        return {
+            'productId': item.productId,
+            'price': item.price,
+            'quantity': item.quantity,
+        }
+    })
 
     let response: any
 
@@ -69,14 +66,13 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
             },
             body: JSON.stringify({
                 "amount": checkoutAmount,
-                "receipt": receiptId
+                "receipt": receiptId,
             })
         });
     } catch (e) {
-        toast.error("Failed to create order in server.")
+        toast.error("Failed to create payment order in server.")
         return
     }
-
 
     const order = await response.json();
 
@@ -88,14 +84,18 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
         totalAmount: checkoutAmount,
         userId: user.id,
         quantity: cart.quantity,
-        orderItems: cart.cartItems.map((item) => {
-            return {
-                'productId': item.productId,
-                'price': item.price,
-                'quantity': item.quantity,
-            }
-        }),
+        orderItems: orderItems,
     };
+
+    try {
+        const order = await createOrder(orderObject)
+        orderSetter((allOrders) => {
+            return [order, ...allOrders];
+        })
+    } catch (e) {
+        toast.error("Failed to process your order request.")
+        return
+    }
 
     const options = {
         "key": rzrpKeyId,
@@ -129,20 +129,12 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
                 const isValid = await validatePayment()
 
                 if (isValid) {
-                    orderObject.paymentId = response.razorpay_payment_id;
-                    orderObject.status = 'paid';
-
-                    createOrderAndUpdateState(orderObject).then(isSuccess => {
-                        if (isSuccess) {
-                            navigate('/order-success/' + orderObject.id)
-                        }
-                    })
-
+                    navigate('/order-success/' + orderObject.id)
                 } else {
                     orderObject.paymentId = response.razorpay_payment_id;
                     orderObject.status = 'unverified';
 
-                    createOrderAndUpdateState(orderObject)
+                    updateOrderState(orderObject)
 
                     toast.error("Detected payment as Invalid")
                 }
@@ -159,15 +151,15 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
                 orderObject.status = 'cancelled';
                 orderObject.paymentId = 'cancelled';
 
-                createOrderAndUpdateState(orderObject)
+                updateOrderState(orderObject)
             }
+        },
+        "notes": {
+            receiptId,
         },
         'retry': {
             'enabled': false,
         },
-        // "notes": {
-        //     "location": "localhost"
-        // },
         "theme": {
             "color": "#029688"
         }
@@ -176,15 +168,8 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
     const paymentObject = new (window as any).Razorpay(options);
     paymentObject.open();
 
-    paymentObject.on('payment.failed', function (response: any) {
-        orderObject.paymentId = response.error.metadata.payment_id;
-        orderObject.status = 'failed';
-
-        createOrderAndUpdateState(orderObject).then(isSuccess => {
-            if (isSuccess) {
-                paymentFailedToast({ amountPayable, orderSetter, addressId, user, cart, navigate })
-            }
-        })
+    paymentObject.on('payment.failed', function () {
+        paymentFailedToast({ amountPayable, orderSetter, addressId, user, cart, navigate })
     })
 }
 
