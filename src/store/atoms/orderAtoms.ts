@@ -1,20 +1,8 @@
-import { atom, selector, selectorFamily } from "recoil";
-import { userAtom } from "./authAtoms";
-import { getAllOrders } from "../../data/orderData";
+import { atom, selectorFamily } from "recoil";
 
 export const allOrdersAtom = atom<Order[]>({
     key: 'allOrdersAtom',
-    default: selector({
-        key: 'allOrdersAtomSelector',
-        get: async ({ get }) => {
-            const user = get(userAtom);
-
-            if (!user) return []
-
-            const allOrders = await getAllOrders(user.id);
-            return allOrders
-        }
-    })
+    default: []
 })
 
 export const getOrderAtom = selectorFamily({
@@ -22,6 +10,9 @@ export const getOrderAtom = selectorFamily({
     get: id => ({ get }) => {
         const allOrders = get(allOrdersAtom)
 
-        return allOrders.find(order => order.id == id)
+        if(Array.isArray(allOrders)){
+            return allOrders.find(order => order.id == id)
+        }
+        return undefined
     }
 })
