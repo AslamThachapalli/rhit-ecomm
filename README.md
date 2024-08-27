@@ -7,8 +7,8 @@ Stack:
 - TailwindCSS + Material Tailwind
 - Recoil
 - Firebase
-- Hono
-- Cloudflare workers
+- Hono + Cloudflare workers
+- Cloud Functions
 
 Payment Gateway: Razorpay \
 For Delivery: Shiprocket
@@ -17,19 +17,18 @@ Backend Repo &#8594; [Click Here](https://github.com/AslamThachapalli/serverless
 
 Features: 
 - [x] Authentication
-- [ ] Products Page - Products will be categorised
-- [ ] Product Detail Page
-- [ ] Managing Addresses
-- [x] Add to Cart
-- [x] View and Modify cart
-- [x] Checkout
-- [x] Payment gateway
-- [ ] Place order on shiprocket on payment success
+- [ ] Products Overview and Details Page - Products will be categorised
+- [x] Address Management
+- [x] Cart Management
+- [x] Checkout with Payment Integration
+- [x] Place order on shiprocket on payment success
 - [ ] Email notification to the seller on order placement by the customer
-- [x] View Orders
-- [ ] Track order status
+- [ ] View and Track Orders for buyer
+- [ ] Product Return and Refund Management
 - [ ] Admin Flow for:
   - [ ] Adding products to the DB and modifying them
-- [ ] Contact us page
 
 *PS: More features will be added on scale*
+
+## Payment Flow System Design
+![Payments Flow](https://github.com/user-attachments/assets/cac4664d-5051-4029-a62e-f8509c9e7787)
