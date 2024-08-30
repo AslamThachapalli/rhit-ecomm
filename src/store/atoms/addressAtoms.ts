@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom, selector, selectorFamily } from "recoil";
 import { userAtom } from "./authAtoms";
 import { getAllAddress } from "../../data/addressData";
 
@@ -13,4 +13,13 @@ export const addressAtom = atom<Address[]>({
             return await getAllAddress(user.id);
         }
     })
+})
+
+export const addressFromIdAtom = selectorFamily({
+    key: "addressFromIdAtomSelector",
+    get: id => ({ get }) => {
+        const allAddress = get(addressAtom);
+
+        return allAddress.find(address => address.id == id)
+    }
 })

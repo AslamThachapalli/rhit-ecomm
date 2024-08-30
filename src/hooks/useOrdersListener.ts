@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 export const useOrdersListener = () => {
     const setOrders = useSetRecoilState(allOrdersAtom);
-    const userId = useRecoilValue(userAtom)!.id;
+    const userId = useRecoilValue(userAtom)?.id;
 
     useEffect(() => {
         if (!userId) return;

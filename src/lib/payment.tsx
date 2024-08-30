@@ -133,6 +133,7 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
                 } else {
                     orderObject.paymentId = response.razorpay_payment_id;
                     orderObject.status = 'unverified';
+                    orderObject.failedOn = Date.now();
 
                     updateOrderState(orderObject)
 
@@ -150,6 +151,7 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
             "ondismiss": function () {
                 orderObject.status = 'cancelled';
                 orderObject.paymentId = 'cancelled';
+                orderObject.cancelledOn = Date.now();
 
                 updateOrderState(orderObject)
             }

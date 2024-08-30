@@ -77,8 +77,16 @@ interface Order {
     shippingId?: string;
     isRefunded?: boolean;
     refundId?: string;
-    createdAt: number;
-    updatedAt?: number;
+    createdOn: number;
+    updatedOn?: number;
+    cancelledOn?: number;
+    failedOn?: number;
+    paidOn?: number;
+    refundInitiatedOn?: number;
+    refundedOn?: number;
+    deliveredOn?: number;
+    returnInitiatedOn?: number;
+    returnedOn?: number;
 }
 
 interface OrderItem {

@@ -12,6 +12,7 @@ import ErrorRoute from './routes/ErrorRoute.tsx'
 import CheckoutRoute from './routes/CheckoutRoute.tsx'
 import OrderSuccessRoute from './routes/OrderSuccessRoute.tsx'
 import MyOrdersRoute from './routes/MyOrdersRoute.tsx'
+import OrderDetailRoute from './routes/OrderDetailRoute.tsx'
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +38,16 @@ export const router = createBrowserRouter([
           }, 
           {
             path: 'my-orders',
-            element: <MyOrdersRoute />
+            children: [
+              {
+                index: true,
+                element: <MyOrdersRoute />,
+              },
+              {
+                path: ":id",
+                element: <OrderDetailRoute />
+              }
+            ]
           }
         ]
       },
