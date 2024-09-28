@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 
 export default function RootRoute() {
     return (
-        <div className="max-h-screen overflow-scroll bg-surface pt-8">
+        <div className="max-h-screen bg-surface">
 
             <Toaster position="top-right" />
 

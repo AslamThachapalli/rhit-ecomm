@@ -127,6 +127,10 @@ export default function CartRoute() {
                     </div>
                 </div>
             </div>
+
+            <div className="h-screen w-full bg-red-50">
+
+            </div>
         </div>
     )
 }

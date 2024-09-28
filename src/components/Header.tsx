@@ -1,29 +1,36 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import {
-  Navbar,
-  Collapse,
-  Typography,
   IconButton,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
   Button,
   Spinner,
   Badge,
 } from "@material-tailwind/react";
-import { Bars3Icon, XMarkIcon, UserIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { UserIcon, ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useRecoilStateLoadable, useRecoilValueLoadable } from "recoil";
 import { userAtom } from "../store/atoms/authAtoms";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cartCountAtom } from "../store/atoms/cartAtoms";
 import { signOutUser } from "../data/authData";
 
-function NavList() {
+const Header = () => {
   const [user, setUser] = useRecoilStateLoadable(userAtom);
   const cartCount = useRecoilValueLoadable(cartCountAtom);
-
+  const [scrolled, setScrolled] = useState(false);
+  const [toggle, setToggle] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolltop = window.scrollY;
+
+      setScrolled(scrolltop > 100)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const signOut = () => {
     signOutUser()
@@ -32,171 +39,82 @@ function NavList() {
   }
 
   return (
-    <ul className="my-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
-      {/* Products */}
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="p-1 font-medium">
-        <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
-          All Products
-        </a>
-      </Typography>
-
-      {/* Cart Icon */}
-      <div className="hidden lg:inline-block">
-        <Badge content={`${cartCount.contents}`} invisible={cartCount.state == 'loading' || cartCount.contents == null} color="teal" withBorder>
-          <IconButton
-            variant="text"
-            className="h-8 w-8 text-inherit"
-            ripple={true}
-            onClick={() => navigate('/cart')}
+    <div className="flex justify-center">
+      <div className={`transition-all ease-in-out duration-700 fixed top-0 z-20 flex items-center justify-center py-4 ${scrolled ?
+        "bg-indigo-800/50 backdrop-blur-md w-full lg:w-11/12 xl:w-9/12 lg:mt-5 mt-0 px-8 rounded-none lg:rounded-xl shadow" :
+        "bg-transparent w-full px-8 lg:px-20 shadow-none"}`}>
+        <div className={`relative w-full flex justify-between items-center mx-auto ${location.pathname === '/' ? "text-white" : `${scrolled ? "text-white" : "text-black"}`}`}>
+          <Link
+            to="/"
+            className="flex "
           >
-            <ShoppingCartIcon className="h-6 w-6" />
-          </IconButton>
-        </Badge>
-      </div>
-
-      <div className="flex justify-start items-center space-x-4 lg:hidden">
-        <Typography
-          as="li"
-          variant="small"
-          color="blue-gray"
-          className=" p-1 font-medium">
-          <Link to={'/cart'} className="flex items-center hover:text-blue-500 transition-colors">
-            My Cart
+            <p className="font-black text-xl">Repair Hands</p>
           </Link>
-        </Typography>
-        <Badge content={`${cartCount.contents}`} invisible={cartCount.state == 'loading' || cartCount.contents == null} color="teal" withBorder><div /></Badge>
-      </div>
+          <div className="flex flex-1 justify-end items-center gap-7">
+            <Badge content={`${cartCount.contents}`} invisible={cartCount.state == 'loading' || cartCount.contents == null} color="indigo">
+              <IconButton
+                variant="text"
+                className="h-8 w-8 text-inherit"
+                ripple={true}
+                onClick={() => navigate('/cart')}
+              >
+                <ShoppingCartIcon className="h-6 w-6" />
+              </IconButton>
+            </Badge>
+            {
+              user.state === "loading" ?
+                <Spinner /> :
+                user.contents ?
+                  <div
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setToggle(!toggle)
+                    }}
+                  >
+                    <UserIcon className="h-6 w-6" />
 
-      {/* Orders */}
-      {/* {user && <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="lg:hidden inline-block p-1 font-medium">
-        <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
-          My Order
-        </a>
-      </Typography>} */}
-
-      {/* Login Button Or Account Icon */}
-      {user.state == 'loading' ?
-        <Spinner color="teal" />
-        :
-        user.contents ?
-          <>
-            <Menu placement="bottom-end">
-              <MenuHandler>
-                <IconButton
-                  variant="text"
-                  className="h-8 w-8 text-inherit hidden lg:inline-block"
-                  ripple={true}
-                  onClick={() => { }}
-                >
-                  <UserIcon className="h-6 w-6" />
-                </IconButton>
-              </MenuHandler>
-              <MenuList>
-                <MenuItem onClick={() => navigate('/account')}>
-                  Account Details
-                </MenuItem>
-                <MenuItem onClick={() => navigate('/account/my-orders')}>
-                  My Orders
-                </MenuItem>
-                <hr className="my-3" />
-                <MenuItem onClick={() => signOut()}>
-                  Sign out
-                </MenuItem>
-              </MenuList>
-            </Menu>
-
-            <Typography
-              as="li"
-              variant="small"
-              color="blue-gray"
-              className="lg:hidden inline-block p-1 font-medium"      >
-              <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
-                My Account
-              </a>
-            </Typography>
-          </>
-          :
-          <>
-            <Button
-              variant="gradient"
-              size="sm"
-              className="hidden lg:inline-block"
-              color="teal"
-              onClick={() => navigate('/auth')}
-            >
-              Login
-            </Button>
-            <Typography
-              as="li"
-              variant="small"
-              color="blue-gray"
-              className="lg:hidden inline-block p-1 font-medium"      >
-              <a href="#" className="flex items-center hover:text-blue-500 transition-colors">
-                Login
-              </a>
-            </Typography>
-          </>
-      }
-    </ul>
-  );
-}
-
-export default function Header() {
-  const user = useRecoilValueLoadable(userAtom);
-
-  const [openNav, setOpenNav] = React.useState(false);
-
-  const handleWindowResize = () =>
-    window.innerWidth >= 960 && setOpenNav(false);
-
-  React.useEffect(() => {
-    window.addEventListener("resize", handleWindowResize);
-
-    return () => {
-      window.removeEventListener("resize", handleWindowResize);
-    };
-  }, []);
-
-  return (
-    <Navbar className="sticky top-0 z-10 mx-auto lg:max-w-screen-xl w-11/12 px-6 py-3">
-      <div className="flex items-center justify-between text-blue-gray-900">
-        <Typography
-          as="a"
-          href="#"
-          variant="h6"
-          className="mr-4 cursor-pointer py-1.5"        >
-          Repair Hands
-        </Typography>
-        <div className="hidden lg:block">
-          <NavList />
+                    <div className={`${toggle ? "flex" : "hidden"
+                      } absolute top-11 right-0 py-3 px-4 bg-white rounded-xl shadow`}>
+                      <ul className="list-none flex flex-1 flex-col justify-end items-start gap-4 text-black">
+                        <li
+                          className="text-black hover:text-gray-600 text-[18px] font-medium cursor-pointer"
+                          onClick={() => {
+                            navigate('/account')
+                            setToggle(!toggle)
+                          }}
+                        >Account Details</li>
+                        <li
+                          className="text-black hover:text-gray-600 text-[18px] font-medium cursor-pointer"
+                          onClick={() => {
+                            navigate('/account/my-orders')
+                            setToggle(!toggle)
+                          }}
+                        >My Orders</li>
+                        <li
+                          className="text-black hover:text-gray-600 text-[18px] font-medium cursor-pointer"
+                          onClick={() => {
+                            signOut();
+                            setToggle(!toggle);
+                          }}
+                        >Sign Out</li>
+                      </ul>
+                    </div>
+                  </div> :
+                  <Button
+                    variant="gradient"
+                    size="sm"
+                    className="hidden lg:inline-block"
+                    color="indigo"
+                    onClick={() => navigate('/auth')}
+                  >
+                    Sign in
+                  </Button>
+            }
+          </div>
         </div>
-        {
-          user.state == 'loading' ?
-            <Spinner color="teal" className="lg:hidden" /> :
-            <IconButton
-              variant="text"
-              className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-              ripple={false}
-              onClick={() => setOpenNav(!openNav)}        >
-              {openNav ? (
-                <XMarkIcon className="h-6 w-6" strokeWidth={2} />
-              ) : (
-                <Bars3Icon className="h-6 w-6" strokeWidth={2} />
-              )}
-            </IconButton>
-        }
       </div>
-      <Collapse open={openNav}>
-        <NavList />
-      </Collapse>
-    </Navbar>
-  );
+    </div>
+  )
 }
+
+export default Header
