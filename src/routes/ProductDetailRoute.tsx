@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { getProductAtom } from "../store/atoms/productAtoms"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { formatToPrice } from "../lib/formatters"
 import { Button } from "@material-tailwind/react"
 
@@ -13,7 +13,7 @@ const ImageGallery = ({ images, id }: { images: string[], id: string }) => {
             <div className="">
                 <img
                     src={images[active]}
-                    className="w-full max-w-full object-contain object-center md:h-[500px]"
+                    className="w-full max-w-full object-contain object-center lg:h-[500px]"
                 />
             </div>
 
@@ -24,7 +24,7 @@ const ImageGallery = ({ images, id }: { images: string[], id: string }) => {
                             key={`${id}-${index}`}
                             onClick={() => setActive(index)}
                             src={image}
-                            className={`${active === index ? "border-2 border-black" : ""} transition-all w-24 h-24 object-fill object-center rounded-lg`}
+                            className={`${active === index ? "border-2 border-black" : ""} transition-all w-16 h-16 md:w-24 md:h-24 object-fill object-center rounded-lg`}
                         />
                     ))
                 }
@@ -46,9 +46,9 @@ const ProductDetailRoute = () => {
     }
 
     return (
-        <div className="relative pt-28 w-11/12 mx-auto">
-            <div className="relative lg:fixed inset-0 w-full lg:w-6/12 pt-0 lg:pt-28 mb-10">
-                <div className="mr-0 lg:mr-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 pt-28 w-10/12 mx-auto gap-10">
+            <div className="lg:sticky top-16 col-span-1 lg:h-[620px] w-full mb-10">
+                <div className="">
                     <ImageGallery
                         images={[product.mainImg, ...product.moreImgs]}
                         id={product.id}
@@ -56,10 +56,10 @@ const ProductDetailRoute = () => {
                 </div>
             </div>
 
-            <div className="w-full ml-auto lg:w-6/12">
+            <div className="col-span-1 w-full ml-auto">
                 <div className="flex flex-col gap-2">
-                    <p className="font-semibold text-2xl">{product.heading}</p>
-                    <p className="pt-4 font-semibold text-xl">{formatToPrice(product.price)}</p>
+                    <p className="font-semibold text-xl md:text-2xl">{product.heading}</p>
+                    <p className="pt-4 font-semibold text-lg md:text-xl">{formatToPrice(product.price)}</p>
                     <Button
                         className="flex items-center justify-center gap-3 my-6"
                     >
@@ -83,9 +83,9 @@ const ProductDetailRoute = () => {
                                     key={`${product.id}-quickInfo-${key}`}
                                     className="py-1"
                                 >
-                                    <div className="w-full grid grid-cols-4 gap-4 leading-tight">
-                                        <h4 className="font-semibold text-sm">{key}</h4>
-                                        <p className="text-sm">{value}</p>
+                                    <div className="w-full grid grid-cols-5 sm:grid-cols-4 gap-7 leading-tight">
+                                        <h4 className="font-semibold text-sm col-span-2 sm:col-span-1">{key}</h4>
+                                        <p className="text-sm col-span-3">{value}</p>
                                     </div>
                                 </li>
                             ))
