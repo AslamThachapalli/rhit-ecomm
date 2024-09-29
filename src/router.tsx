@@ -13,6 +13,7 @@ import CheckoutRoute from './routes/CheckoutRoute.tsx'
 import OrderSuccessRoute from './routes/OrderSuccessRoute.tsx'
 import MyOrdersRoute from './routes/MyOrdersRoute.tsx'
 import OrderDetailRoute from './routes/OrderDetailRoute.tsx'
+import ProductDetailRoute from './routes/ProductDetailRoute.tsx'
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <HomeRoute />,
+      },
+      {
+        path: 'product/:id',
+        element: <ProductDetailRoute />
       },
       {
         path: 'account',

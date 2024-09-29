@@ -5,6 +5,7 @@ import { getAllProducts } from "../data/productsData";
 import { useRecoilState } from "recoil";
 import { cartAtom } from "../store/atoms/cartAtoms";
 import Hero from "../components/Hero";
+import ProductSection from "../components/ProductSection";
 
 export default function HomeRoute() {
     const [products, setProducts] = useState<Product[]>([])
@@ -32,8 +33,9 @@ export default function HomeRoute() {
     }
 
     return (
-        <div>
+        <div className="bg-surface">
             <Hero />
+            <ProductSection />
             <div className="flex flex-col space-y-3 my-8">
                 {
                     products.map((product) => {

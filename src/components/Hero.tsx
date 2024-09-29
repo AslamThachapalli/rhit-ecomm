@@ -65,7 +65,7 @@ const Hero = () => {
                 </motion.div>
             </div>
 
-            <div className="hidden lg:block absolute -bottom-10 right-0 w-[70%] h-full translate-y-5">
+            <div className="hidden lg:block absolute -bottom-10 right-0 w-[70%] h-full  overflow-visible">
                 <ComputerCanvas />
             </div>
 
@@ -82,7 +82,7 @@ const Computer = ({screenWidth}:{screenWidth: number}) => {
             <directionalLight position={[0, 30, 10]} castShadow />
             <primitive
                 object={computer.scene}
-                scale={screenWidth > 1350? 1.3: 1}
+                scale={screenWidth > 1350? 1.4: 1}
                 rotation={[-0.01, -0.5, 0.05]}
             />
         </mesh>

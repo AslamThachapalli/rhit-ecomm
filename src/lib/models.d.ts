@@ -41,6 +41,12 @@ interface Product {
     categoryId: string;
     price: number;
     stockQuantity: number;
+    sku: string;
+    mainImg: string;
+    moreImgs: string[];
+    heading: string;
+    quickInfo: {[key: string]: string};
+    about: string[];
 }
 
 interface Category {

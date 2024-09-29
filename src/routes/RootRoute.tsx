@@ -9,21 +9,19 @@ import { Toaster } from "react-hot-toast";
 
 export default function RootRoute() {
     return (
-        <div className="max-h-screen bg-surface">
+        <div className="bg-surface">
 
             <Toaster position="top-right" />
 
             <Header />
 
             <Suspense fallback={<Loading />}>
-                <div className="">
-                    <Outlet />
-                </div>
+                <Outlet />
             </Suspense>
-            
+
             <div className="mt-6">
 
-            <Footer />
+                <Footer />
             </div>
         </div>
     )

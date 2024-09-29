@@ -10,7 +10,7 @@ import { ThemeProvider } from '@material-tailwind/react'
 const theme = {
   button: {
     defaultProps: {
-      color: "teal",
+      color: "indigo",
     },
   }
 }

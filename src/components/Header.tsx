@@ -42,7 +42,7 @@ const Header = () => {
     <div className="flex justify-center">
       <div className={`transition-all ease-in-out duration-700 fixed top-0 z-20 flex items-center justify-center py-4 ${scrolled ?
         "bg-indigo-800/50 backdrop-blur-md w-full lg:w-11/12 xl:w-9/12 lg:mt-5 mt-0 px-8 rounded-none lg:rounded-xl shadow" :
-        "bg-transparent w-full px-8 lg:px-20 shadow-none"}`}>
+        "bg-transparent w-full px-8 lg:px-36 shadow-none"}`}>
         <div className={`relative w-full flex justify-between items-center mx-auto ${location.pathname === '/' ? "text-white" : `${scrolled ? "text-white" : "text-black"}`}`}>
           <Link
             to="/"
