@@ -9,20 +9,21 @@ import { Toaster } from "react-hot-toast";
 
 export default function RootRoute() {
     return (
-        <div className="bg-surface">
+        <div className="bg-surface flex-col flex">
 
             <Toaster position="top-right" />
 
             <Header />
 
+            <div className="flex-1">
             <Suspense fallback={<Loading />}>
                 <Outlet />
             </Suspense>
-
-            <div className="mt-6">
-
-                <Footer />
             </div>
+
+            {/* <div className="mt-6">
+                <Footer />
+            </div> */}
         </div>
     )
 }
@@ -30,7 +31,7 @@ export default function RootRoute() {
 function Loading() {
     return (
         <div className="flex justify-center items-center h-screen">
-            <Spinner color="teal" />
+            <Spinner color="indigo" />
         </div>
     )
 }

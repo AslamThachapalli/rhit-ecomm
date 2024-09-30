@@ -12,20 +12,20 @@ const ProductCard = ({ product }: { product: Product }) => {
 
     return (
         <Tilt>
-            <div 
-            onClick={() => navigate(`/product/${product.id}`)}
-            className="rounded-xl min-h-[280px] p-[1px] bg-gradient-to-b from-indigo-800 to-orange-700 transition-all ease-in hover:scale-105 cursor-pointer shadow-xl"
+            <div
+                onClick={() => navigate(`/product/${product.id}`)}
+                className="rounded-xl min-h-[280px] p-[1px] bg-gradient-to-b from-indigo-800 to-orange-700 transition-all ease-in hover:scale-105 cursor-pointer shadow-xl"
             >
-            <div className="bg-white py-4 px-6 rounded-xl flex flex-col justify-start items-start">
-                <img
-                    src={product.mainImg}
-                    alt={product.name}
-                    className="bg-white h-60 w-full object-contain"
-                />
-                <p className="mt-6 font-extrabold text-[20px]">{product.name}</p>
-                <p className="mt-2 font-bold">{formatToPrice(product.price)}</p>
+                <div className="bg-white py-4 px-6 rounded-xl flex flex-col justify-start items-start">
+                    <img
+                        src={product.mainImg}
+                        alt={product.name}
+                        className="bg-white h-60 w-full object-contain"
+                    />
+                    <p className="mt-6 font-extrabold text-[20px]">{product.name}</p>
+                    <p className="mt-2 font-bold">{formatToPrice(product.price)}</p>
+                </div>
             </div>
-        </div>
         </Tilt>
     )
 }

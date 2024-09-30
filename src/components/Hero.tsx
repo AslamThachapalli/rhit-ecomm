@@ -1,4 +1,3 @@
-
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Preload, useGLTF } from "@react-three/drei"
 import rectangleHero from '/svg/rectangle-hero.svg';
@@ -82,7 +81,7 @@ const Computer = ({screenWidth}:{screenWidth: number}) => {
             <directionalLight position={[0, 30, 10]} castShadow />
             <primitive
                 object={computer.scene}
-                scale={screenWidth > 1350? 1.4: 1}
+                scale={screenWidth > 1350? 1.5: 1}
                 rotation={[-0.01, -0.5, 0.05]}
             />
         </mesh>
