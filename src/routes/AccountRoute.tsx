@@ -32,7 +32,12 @@ const theme = {
                 }
             }
         },
-    }
+    },
+    button: {
+        defaultProps: {
+          color: "indigo",
+        },
+      }
 }
 
 export default function AccountRoute() {
@@ -74,21 +79,19 @@ export default function AccountRoute() {
                 <DialogFooter>
                     <Button
                         variant="text"
-                        color="teal"
                         onClick={cancelLogout}
                         className="mr-1">
                         <span>Cancel</span>
                     </Button>
                     <Button
                         variant="gradient"
-                        color="teal"
                         onClick={signOut}>
                         <span>Confirm</span>
                     </Button>
                 </DialogFooter>
             </Dialog>
 
-            <div className="grid grid-cols-5 mx-auto mt-10 lg:max-w-screen-xl w-11/12 px-6 py-3" >
+            <div className="grid grid-cols-5 mx-auto pt-24 lg:max-w-screen-xl w-11/12 px-6 py-3" >
                 <div className="col-span-1">
                     <List className="pe-10" >
                         <ListItem selected={selectedIndex === 1} onClick={() => {

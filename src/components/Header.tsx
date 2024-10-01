@@ -41,9 +41,9 @@ const Header = () => {
   return (
     <div className="flex justify-center">
       <div className={`transition-all ease-in-out duration-700 fixed top-0 z-20 flex items-center justify-center py-4 ${scrolled ?
-        "bg-indigo-800/50 backdrop-blur-md w-full lg:w-11/12 xl:w-9/12 lg:mt-5 mt-0 px-8 rounded-none lg:rounded-xl shadow" :
-        "bg-transparent w-full px-8 lg:px-36 shadow-none"}`}>
-        <div className={`relative w-full flex justify-between items-center mx-auto ${location.pathname === '/' ? "text-white" : `${scrolled ? "text-white" : "text-black"}`}`}>
+        "bg-blue-gray-800/50 backdrop-blur-md w-full lg:w-11/12 xl:w-9/12 lg:mt-5 mt-0 px-8 rounded-none lg:rounded-xl shadow" :
+        `${location.pathname === "/" ? "bg-transparent" : "bg-blue-gray-300"} w-full px-8 lg:px-36 shadow-none`}`}>
+        <div className={`relative w-full flex justify-between items-center mx-auto text-white`}>
           <Link
             to="/"
             className="flex "
@@ -51,7 +51,12 @@ const Header = () => {
             <p className="font-black text-xl">Repair Hands</p>
           </Link>
           <div className="flex flex-1 justify-end items-center gap-7">
-            <Badge content={`${cartCount.contents}`} invisible={cartCount.state == 'loading' || cartCount.contents == null} color="indigo">
+            <Badge
+              content={`${cartCount.contents}`}
+              withBorder
+              invisible={cartCount.state == 'loading' || cartCount.contents == null}
+              color="indigo"
+            >
               <IconButton
                 variant="text"
                 className="h-8 w-8 text-inherit"

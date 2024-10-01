@@ -16,14 +16,12 @@ export default function RootRoute() {
             <Header />
 
             <div className="flex-1">
-            <Suspense fallback={<Loading />}>
-                <Outlet />
-            </Suspense>
+                <Suspense fallback={<Loading />}>
+                    <Outlet />
+                </Suspense>
             </div>
 
-            {/* <div className="mt-6">
-                <Footer />
-            </div> */}
+            <Footer />
         </div>
     )
 }

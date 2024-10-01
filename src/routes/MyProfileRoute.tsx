@@ -1,47 +1,93 @@
 import {
     Card,
-    Typography,
     Input,
     Button,
 } from "@material-tailwind/react";
+import { useRecoilValue } from "recoil";
+import { userAtom } from "../store/atoms/authAtoms";
+import React, { useRef } from "react";
 
 export default function MyProfileRoute() {
+    const ref = useRef<HTMLFormElement>(null);
+    const user = useRecoilValue(userAtom)!;
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.currentTarget)
+
+        const firstname = formData.get('firstname')
+        const lastname = formData.get('lastname')
+        const email = formData.get('email')
+        const phone = formData.get('phone')
+    }
+
     return (
         <Card className="p-14">
-            <div className="flex flex-col gap-7">
-                <Typography variant="h5">
+            <form ref={ref} onSubmit={handleSubmit} className="flex flex-col gap-7 group">
+                <h2 className="text-lg font-semibold">
                     Edit Your Profile
-                </Typography>
+                </h2>
                 <div className="flex gap-10">
-                    <Input size="lg" label="First Name"/>
-                    <Input size="lg" label="Last Name"/>
+                    <Input
+                        size="lg"
+                        label="First Name"
+                        name="firstname"
+                        defaultValue={user.firstname}
+                    />
+                    <Input
+                        size="lg"
+                        label="Last Name"
+                        name="lastname"
+                        defaultValue={user.lastname}
+                    />
                 </div>
 
+                <Input
+                    size="lg"
+                    label="Email"
+                    name="email"
+                    required
+                    type="email"
+                    defaultValue={user.email}
+                />
 
-                <Input size="lg" label="Email"/>
+                <Input
+                    size="lg"
+                    label="Phone"
+                    name="phone"
+                    pattern="^(\+91[\-\s]?)?[6-9]\d{9}$"
+                    minLength={10} 
+                    maxLength={13}
+                    defaultValue={user.phone}
+                />
 
-                <Input size="lg" label="Phone"/>
-
-                <Typography variant="lead">
+                <h2 className="text-lg font-semibold">
                     Password Changes
-                </Typography>
+                </h2>
 
-                <Input size="lg" label="Current Password"/>
+                <Input size="lg" label="Current Password" />
 
-                <Input size="lg" label="New Password"/>
+                <Input size="lg" label="New Password" />
 
-                <Input size="lg" label="Confirm New Password"/>
+                <Input size="lg" label="Confirm New Password" />
 
                 <div className="flex justify-end gap-2">
-                    <Button color="teal" variant="text">
+                    <Button
+                        variant="text"
+                        onClick={() => ref.current?.reset()}
+                    >
                         Cancel
                     </Button>
 
-                    <Button color="teal">
+                    <Button
+                        type="submit"
+                        className="group-invalid:pointer-events-none group-invalid:opacity-30"
+                    >
                         Save Changes
                     </Button>
                 </div>
-            </div>
+            </form>
         </Card>
     )
 }

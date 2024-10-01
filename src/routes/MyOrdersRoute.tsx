@@ -7,6 +7,7 @@ import {
 import { useOrdersListener } from "../hooks/useOrdersListener"
 import { ViewOrderSnapshot } from "../components/ViewOrderSnapshot"
 import { useNavigate } from "react-router-dom"
+import EmptyOrders from "../components/EmptyOrders"
 
 export default function MyOrdersRoute() {
     const navigate = useNavigate()
@@ -14,10 +15,14 @@ export default function MyOrdersRoute() {
 
     const allOrders = useRecoilValue(allOrdersAtom);
 
+    return (<Card>
+        <EmptyOrders />
+    </Card>)
+
     return (
         allOrders.length == 0 ?
             <Card className="p-14 min-h-[75vh]">
-                <div>Empty</div>
+                <EmptyOrders />
             </Card>
             :
             <Card className="p-14 min-h-[75vh]">
