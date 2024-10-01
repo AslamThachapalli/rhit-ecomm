@@ -15,13 +15,9 @@ export default function MyOrdersRoute() {
 
     const allOrders = useRecoilValue(allOrdersAtom);
 
-    return (<Card className="p-8 lg:p-14">
-        <EmptyOrders />
-    </Card>)
-
     return (
         allOrders.length == 0 ?
-            <Card className="p-14 min-h-[75vh]">
+            <Card className="p-8 lg:p-14">
                 <EmptyOrders />
             </Card>
             :
