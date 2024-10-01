@@ -64,4 +64,4 @@ const ProductSection = () => {
     )
 }
 
-export default SectionWrapper(ProductSection)
+export default SectionWrapper(ProductSection, "products")

@@ -15,7 +15,7 @@ export default function MyOrdersRoute() {
 
     const allOrders = useRecoilValue(allOrdersAtom);
 
-    return (<Card>
+    return (<Card className="p-8 lg:p-14">
         <EmptyOrders />
     </Card>)
 

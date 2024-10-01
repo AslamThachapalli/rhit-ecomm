@@ -17,7 +17,7 @@ export default function AddressRoute() {
 
     return (
         <>
-            <Card className="p-14 min-h-[75vh]">
+            <Card className="p-8 lg:p-14 min-h-[75vh]">
                 {
                     newAddress.add ?
                         <AddNewAddressForm
@@ -101,20 +101,18 @@ function AllAddresses({ setNewAddress }: AllAddressesProps) {
     }
 
     return (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid lg:grid-cols-2 gap-4">
             <Dialog size="xs" open={deleteState.showDialog} handler={cancelDelete}>
                 <DialogBody>Confirm to delete the current address?</DialogBody>
                 <DialogFooter>
                     <Button
                         variant="text"
-                        color="teal"
                         onClick={cancelDelete}
                         className="mr-1">
                         <span>Cancel</span>
                     </Button>
                     <Button
                         variant="gradient"
-                        color="teal"
                         onClick={handleDelete}>
                         <span>Confirm</span>
                     </Button>

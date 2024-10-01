@@ -8,6 +8,16 @@
     font-family: "Poppins", sans-serif;
 }
 
+.hash-span {
+    margin-top: -100px;
+    padding-bottom: 100px;
+    display: block;
+  }
+
 .card-gradient {
     @apply bg-gradient-to-br from-blue-300 to-indigo-50
+}
+
+.navlink {
+    @apply py-3 px-4 flex-1 flex gap-3 items-center rounded-xl hover:bg-blue-gray-200 hover:text-white
 }

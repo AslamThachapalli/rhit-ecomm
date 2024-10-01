@@ -23,12 +23,12 @@ export default function MyProfileRoute() {
     }
 
     return (
-        <Card className="p-14">
+        <Card className="p-8 lg:p-14">
             <form ref={ref} onSubmit={handleSubmit} className="flex flex-col gap-7 group">
                 <h2 className="text-lg font-semibold">
                     Edit Your Profile
                 </h2>
-                <div className="flex gap-10">
+                <div className="flex gap-7 lg:gap-10 flex-col lg:flex-row">
                     <Input
                         size="lg"
                         label="First Name"

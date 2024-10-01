@@ -77,7 +77,7 @@ export default function AddNewAddressForm({ onCancel, onSaved, onSaveError, addr
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6 group" noValidate>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-2 gap-6">
                 <Input name="name" defaultValue={address?.name} minLength={3} required label="Full Name" size="lg" />
                 <Input name="phone" defaultValue={address?.phone} minLength={10} maxLength={13} required type="text" pattern="^(\+91[\-\s]?)?[6-9]\d{9}$" label="Mobile number" size="lg" />
                 <Input name="email" defaultValue={address?.email} className="peer" required type="email" pattern="^[\w\.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$" label="Email" size="lg" />
@@ -85,7 +85,7 @@ export default function AddNewAddressForm({ onCancel, onSaved, onSaveError, addr
             </div>
             <Input name="address" defaultValue={address?.address} minLength={5} required label="Complete address" size="lg" />
             <Input name="landmark" defaultValue={address?.landmark} minLength={5} label="Landmark" size="lg" />
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-2 gap-6">
                 <Input name="pincode" defaultValue={address?.pincode} required type="text" pattern="^\d{6}$" label="Pincode" size="lg" />
                 <Input name="city" defaultValue={address?.city} minLength={3} required label="City" size="lg" />
                 <Input name="state" defaultValue={address?.state} minLength={3} required label="State" size="lg" />

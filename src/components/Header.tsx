@@ -84,7 +84,7 @@ const Header = () => {
                         <li
                           className="text-black hover:text-gray-600 text-[18px] font-medium cursor-pointer"
                           onClick={() => {
-                            navigate('/account')
+                            navigate('/account/my-profile')
                             setToggle(!toggle)
                           }}
                         >Account Details</li>
