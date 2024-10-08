@@ -33,7 +33,10 @@ export async function createOrder(order: Partial<Order>): Promise<Order> {
 
 export async function updateOrder(order: Partial<Order>) {
     try {
-        await updateDoc(doc(db, "orders", order.id!), { ...order })
+        let orderFields = { ...order };
+        delete orderFields.orderItems;
+
+        await updateDoc(doc(db, "orders", order.id!), { ...orderFields })
     } catch (e) {
         throw new Error("Failed updating your order status")
     }

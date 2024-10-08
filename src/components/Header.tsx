@@ -61,7 +61,10 @@ const Header = () => {
                 variant="text"
                 className="h-8 w-8 text-inherit"
                 ripple={true}
-                onClick={() => navigate('/cart')}
+                onClick={() => {
+                  navigate('/cart')
+                  window.scrollTo({ top: 0 })
+                }}
               >
                 <ShoppingCartIcon className="h-6 w-6" />
               </IconButton>

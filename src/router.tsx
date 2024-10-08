@@ -14,6 +14,7 @@ import OrderSuccessRoute from './routes/OrderSuccessRoute.tsx'
 import MyOrdersRoute from './routes/MyOrdersRoute.tsx'
 import OrderDetailRoute from './routes/OrderDetailRoute.tsx'
 import ProductDetailRoute from './routes/ProductDetailRoute.tsx'
+import ContactRoute from './routes/ContactRoute.tsx'
 
 export const router = createBrowserRouter([
   {
@@ -68,11 +69,15 @@ export const router = createBrowserRouter([
       {
         path: 'order-success/:orderId',
         element: <RequireAuth><OrderSuccessRoute /></RequireAuth>
+      },
+      {
+        path: '/contact-us',
+        element: <ContactRoute />
       }
     ]
   },
   {
     path: '/auth',
     element: <AuthRoute />
-  }
+  },
 ])

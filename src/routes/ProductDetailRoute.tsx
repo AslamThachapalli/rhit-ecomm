@@ -6,6 +6,7 @@ import { formatToPrice } from "../lib/formatters"
 import { Button } from "@material-tailwind/react"
 import { cartAtom } from "../store/atoms/cartAtoms"
 import { addToCart } from "../data/cartData"
+import { userAtom } from "../store/atoms/authAtoms"
 
 const ImageGallery = ({ images, id }: { images: string[], id: string }) => {
     const [active, setActive] = useState(0)
@@ -39,11 +40,18 @@ const ProductDetailRoute = () => {
     const { id } = useParams()
     const product = useRecoilValue(getProductAtom(id))
     const [cart, setCart] = useRecoilState(cartAtom);
+    const user = useRecoilValue(userAtom);
+
     const navigate = useNavigate();
 
     const isProductInCart = useMemo(() => cart?.cartItems.some(item => item.productId == product?.id), [cart])
 
     async function handleAddToCart(cartItem: CartItem) {
+        if(!user) {
+            navigate('/auth')
+            return
+        }
+
         if (cart == null || isProductInCart) return;
 
         addToCart(cart.id, cartItem)

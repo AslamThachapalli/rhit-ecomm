@@ -14,12 +14,12 @@ export default function MyProfileRoute() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        const formData = new FormData(e.currentTarget)
+        // const formData = new FormData(e.currentTarget)
 
-        const firstname = formData.get('firstname')
-        const lastname = formData.get('lastname')
-        const email = formData.get('email')
-        const phone = formData.get('phone')
+        // const firstname = formData.get('firstname')
+        // const lastname = formData.get('lastname')
+        // const email = formData.get('email')
+        // const phone = formData.get('phone')
     }
 
     return (

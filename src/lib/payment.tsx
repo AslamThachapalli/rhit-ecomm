@@ -46,7 +46,7 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
         return
     }
 
-    const checkoutAmount: number = amountPayable * 100
+    const checkoutAmount: number = amountPayable
     const receiptId: string = uuid()
     const orderItems: OrderItem[] = cart.cartItems.map((item) => {
         return {
@@ -149,9 +149,14 @@ export async function initiatePayment({ amountPayable, orderSetter, addressId, u
         },
         "modal": {
             "ondismiss": function () {
-                orderObject.status = 'cancelled';
-                orderObject.paymentId = 'cancelled';
-                orderObject.cancelledOn = Date.now();
+                console.log("cancelled")
+
+                orderObject = {
+                    ...orderObject,
+                    status: 'cancelled',
+                    paymentId: 'cancelled',
+                    cancelledOn: Date.now()
+                }
 
                 updateOrderState(orderObject)
             }

@@ -13,7 +13,10 @@ const ProductCard = ({ product }: { product: Product }) => {
     return (
         <Tilt>
             <div
-                onClick={() => navigate(`/product/${product.id}`)}
+                onClick={() => {
+                    navigate(`/product/${product.id}`)
+                    window.scrollTo({ top: 0 });
+                }}
                 className="rounded-xl min-h-[280px] p-[1px] bg-gradient-to-b from-indigo-800 to-orange-700 transition-all ease-in hover:scale-105 cursor-pointer shadow-xl"
             >
                 <div className="bg-white py-4 px-6 rounded-xl flex flex-col justify-start items-start">
